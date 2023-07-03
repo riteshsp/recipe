@@ -1,0 +1,170 @@
+<!-- Jumbotron -->
+
+{% extends 'navbar_sidebar.html' %}
+
+{% block content %}
+
+<!-- Jumbotron -->
+
+<!-- Heading -->
+<div>
+    <div class="container py-2" style="background-color: #E7E9EB;">
+        <nav class="d-flex">
+            <h6 class="mb-0">
+                <a href="/adminuser/recipe/">Home</a>
+                <span class=" mx-2"> > </span>
+                <a href="/adminuser/add/recipe/">Add Recipe</a>
+                <span class=" mx-2"> > </span>
+                <a href="" class=><u>Details</u></a>
+            </h6>
+        </nav>
+        <!-- Breadcrumb -->
+    </div>
+</div>
+<!-- Heading -->
+</header>
+{{errors}}
+<!-- content -->
+<section class="py-5">
+    <div class="container">
+        <div class="row gx-5">
+            <aside class="col-lg-6">
+                <div class="  mb-3 d-flex justify-content-center">
+
+                    <center>
+                        <img style="max-width: 100%; max-height: 100vh; margin: auto; width: 60%; border-radius: 15px;"
+                            class=" fit" src="{{data.strMealThumb}}" />
+                    </center>
+                </div>
+            </aside>
+            <main class="col-lg-6">
+                <div class="ps-lg-3">
+                    <h4 class="title text-dark">
+                        {{data.strMeal}}
+                    </h4>
+
+                    <div class="bg-warning p-2 rounded" style="background: rgb(209,226,0);
+                    background: linear-gradient(90deg, rgba(209,226,0,1) 0%, #ece8e3 99%);">
+                        <span class="h6">Category :</span>
+                        <span id="category">{{data.strCategory}}</span>
+                    </div><br><br>
+                    <p>
+                        To add this recipe to database click on the button "Add This Recipe" below for your clients
+                    </p>
+
+                    <div class="row">
+                        <dt class="col-3">Tags:</dt>
+                        <dd class="col-9">{{data.strTags}}</dd>
+                    </div>
+                    <hr/>
+
+                    <a href="/adminuser/add/recipe/toDB/?idMeal={{data.idMeal}}" class="btn btn-success p-3"
+                        style="background-color: rgb(0, 165, 0);"> <b>Add This
+                            Recipe </b></a>
+                </div>
+            </main>
+        </div>
+    </div>
+</section>
+<!-- content -->
+
+<section class="bg-light border-top py-4">
+    <div class="container">
+        <div class="row gx-4">
+            <div class="col-lg-8 mb-4">
+                <div class="border rounded-2 px-3 py-2 bg-white">
+                    <!-- Pills navs -->
+                    <ul class="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
+                        <li class="nav-item d-flex" role="presentation">
+                            <a class="nav-link d-flex align-items-center justify-content-center w-100 active"
+                                id="ex1-tab-1" data-mdb-toggle="pill" href="#instruction" role="tab"
+                                aria-controls="ex1-pills-1" aria-selected="true">Instruction</a>
+                        </li>
+                        <li class="nav-item d-flex" role="presentation">
+                            <a class="nav-link d-flex align-items-center justify-content-center w-100 " id="ex1-tab-2"
+                                data-mdb-toggle="pill" href="#ingredients" role="tab" aria-controls="ex1-pills-2"
+                                aria-selected="false">Ingredients</a>
+                        </li>
+
+                    </ul>
+
+                    <!-- Pills content -->
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="instruction" role="tabpanel"
+                            aria-labelledby="ex1-tab-1">
+                            <p>
+                                {{data.strInstructions}}
+                            </p> <br>
+
+                            <h4>Ingredients list:-</h4>
+
+                            <!-- ingredient content -->
+
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <!-- <li class="list-group-item">Dapibus ac facilisis in</li> -->
+                                    {% for items in data.ingredient %}
+                                    {% if items %}
+                                    <a href="/adminuser/ingredient/?search_data={{items}}">
+                                        <div class="p-2 "><b>{{items}}</b></div>
+                                        {%else%}
+                                        {% endif %}
+                                    </a>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <ul class="list-group list-group-flush">
+
+                                        {% for item in data.measure %}
+                                        {% if item %}
+                                        <div class="p-2 list-group-item">{{item}}</div>
+                                        {%else%}
+                                        {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- ingredient content  end-->
+                        </div>
+                    </div>
+                    <!-- Pills content -->
+
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="px-0 border rounded-2 shadow-0">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Similar items</h5>
+
+
+                            {% for items in data.searchMeals %}
+
+                            {% if items.strMeal == data.strMeal %}
+
+                            {% else%}
+                            <a
+                                href="/adminuser/add/recipe/description/?idMeal={{items.idMeal}}&search_item={{data.search_item}}">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="me-3">
+                                        <img src="{{items.strMealThumb}}" style="min-width: 96px; height: 96px;"
+                                            class="img-md img-thumbnail" />
+                                    </div>
+                                    <div class="info">
+                                        {{items.strMeal}}
+                                    </div>
+                                </div>
+                            </a>
+                            {% endif %}
+                            {% endfor %}
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

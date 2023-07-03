@@ -1,0 +1,89 @@
+{% extends 'navbar_sidebar.html' %}
+{% block content %}
+<style>
+    /* body {
+        background-color: #eee;
+        font-family: "Poppins", sans-serif;
+        font-weight: 300;
+    } */
+    .recipe-edit i {
+        font-size: 1.3rem;
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<div class="row height d-flex justify-content-center align-items-center">
+    <div class="row" style="margin: 1.3rem 0rem;">
+        <div class="col-sm-8 offset-sm-1">
+            <form method="get" action="/adminuser/recipe/">
+                {% csrf_token %}
+                <div class="search">
+                    <i class="fa fa-search"></i>
+                    <input type="text" id="ingredient" class="form-control" placeholder="Search a Recipe ?"
+                        name="search_data ">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-2 d-flex align-items-center justify-content-center">
+            <a href="/adminuser/add/recipe/"><button type="submit"
+                    class="btn btn-success d-flex align-items-center justify-content-center"><i
+                        class='bx bx-message-square-add'></i>&nbsp Add Recipe</button></a>
+            <!-- <input type="button" class="btn btn-success"  value="Add Recipe"> -->
+        </div>
+    </div>
+
+
+    {% if messages %}
+    {% for message in messages %}
+    <center>
+        <h6 style="color: green; padding: 2rem 0rem;">{{message}}</h6>
+    </center>
+    {% endfor %}
+    {% endif %}
+
+
+    <div class="row">
+        {% for item in data.results %}
+        <div class="card col-sm-3" style="margin: 1.5rem; height: 100%;">
+            <a href="/adminuser/recipe/description/?id={{item.id}}">
+
+            <img class="card-img-top" src="{{item.thumbnail}}"
+                style="border-radius: 5px ; object-fit: cover; height:17rem" alt="Dish Picture">
+            <div class="row recipe-edit" style="padding: 8px; height: 100%;">
+
+                <center>
+                    <h6 class="card-text m-1">{{item.name}}</h6>
+                </center>
+             
+
+
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p style="color: rgb(134, 134, 141); font-weight: 500;" class="card-text">Category:
+                            {{item.category_name}}</p>
+                    </div>
+
+                    <div >
+
+                        <a title="Update" href=" ">
+                            <i class="fa-solid fa-pen-to-square" style="color:var(--dark_orange)"></i>
+                        </a>
+                        <a title="Delete" href=" ">
+                            <i class="fa-solid fa-trash-can" style="color:var(--dark_orange)"></i>
+                        </a>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+            </a>
+        </div>
+       
+        {% endfor %}
+
+    </div>
+</div>
+{% endblock %}

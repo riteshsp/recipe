@@ -1,0 +1,136 @@
+from django.shortcuts import render
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from adminuser.serializer import CategorySerializer
+from adminuser.models import Category
+from django.contrib import messages
+from django.shortcuts import redirect
+from recipe.pagination import PagePagination
+import requests
+import json
+import math
+
+
+class ListCategory(APIView):
+    def get(self,request):
+        try:
+
+            name=request.GET.get("search_data","")
+            category=Category.objects.filter(name__icontains=name)
+            paginator = PagePagination()
+            results = paginator.paginate_queryset( category , request , view=self)
+            serializer= CategorySerializer(results ,many=True)
+            page_number=request.GET.get("page","")
+            data = paginator.get_paginated_response(serializer.data).data
+            data["page"]=page_number
+            data["last_page"]=math.ceil(category.count()/paginator.get_page_size(request))
+            
+            for item in serializer.data:
+
+                if item['categoryImage'].startswith("/http"):
+                    item['categoryImage'] = item['categoryImage'][1:]
+                    item['categoryImage'] = item['categoryImage'].replace("%3A",":/")
+                else:
+                    pass
+
+
+            return render(request,"category.html" ,{'data': data})
+            # return Response(serializer.data)
+
+        except Exception as e:
+            return Response(str(e))
+
+
+
+
+
+
+
+class AddCategory(APIView):
+    def get(self,request):
+        category=Category.objects.all()
+        serializer= CategorySerializer(category ,many=True)
+        return render(request,"add_del_category.html" ,{'data': serializer.data})
+    
+
+    
+    def post(self,request):
+        try:
+        
+            data = {
+                    "name": request.data["category_name"],
+                    "categoryImage": request.data["category_image"]               
+                }
+            serializer=CategorySerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                messages.success(request, f"Category '{data['name']}' created Successfully!!!")
+                return redirect ('/adminuser/add/category/')
+            else:
+                return render(request, "add_del_category.html", {"errors": serializer.errors})    
+        except Exception as e:
+            return Response(str(e))
+
+
+class FetchCategory(APIView):
+    def get(self,request):
+        
+        try:
+            apidata = requests.get("https://www.themealdb.com/api/json/v1/1/categories.php")   
+            apidata = json.loads(apidata.content)
+            data=apidata['categories']
+            count=0
+            for items in data:
+                category=Category.objects.filter(name=items["strCategory"])
+                if category:
+                    pass
+                else:
+                    count += 1
+                    Category.objects.create(name=items["strCategory"],categoryImage=items["strCategoryThumb"])
+            messages.success(request, f"{count} Categories added")
+            return redirect ('/adminuser/category/')
+  
+        except Exception as e:
+            return Response(str(e))
+
+
+
+
+
+
+class DeleteCategory(APIView):
+    def get(self,request,id):
+        item=Category.objects.get(id=id)
+        item.delete()
+        messages.success(request,"Category Deleted Successfully")
+        return redirect ('/adminuser/category/')
+
+  
+
+
+class UpdateCategory(APIView):
+    def get(self, request, id):
+        category = Category.objects.get(id=id)
+        serializer = CategorySerializer(category)
+        return render(request, "update_category.html", {"formdata": serializer.data})
+
+
+    def post(self, request, id):      
+        try:
+            data={
+                "name":request.data['category_name'],
+                "categoryImage":request.data['category_image'],
+            }
+
+            category = Category.objects.get(id=id)
+            serializer = CategorySerializer(category, data)
+
+            if serializer.is_valid():
+                serializer.save()
+                messages.success(request,"Category Updated Successfully")
+                return redirect ('/adminuser/category/')
+            else:
+                return render(request, "update_category.html", {"errors": serializer.errors})
+
+        except Exception as e:
+                return render(request, "update_category.html", {"errors": serializer.errors})

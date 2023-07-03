@@ -1,0 +1,160 @@
+{% extends 'navbar_sidebar.html' %}
+{% block content %}
+<style>
+    /* body {
+        background-color: #eee;
+        font-family: "Poppins", sans-serif;
+        font-weight: 300;
+    } */
+
+    .search {
+        position: relative;
+        /* box-shadow: 0 0 40px rgba(51, 51, 51, .1); */
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    /* .search input {
+        height: 50px;
+        text-indent: 5px;
+        border: 2px solid #d6d4d4;
+    } */
+
+    .search input:focus {
+        box-shadow: none;
+        border: 2px solid rgb(255, 136, 0);
+    }
+
+    .search .fa-search {
+        position: absolute;
+        top: 20px;
+        left: 16px;
+    }
+
+    /* .search button {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        height: 50px;
+        width: 110px;
+        background: rgb(255, 136, 0);
+
+    } */
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<div>
+    <div class="row">
+        <div class="col-sm-12 px-5 py-4">
+
+            <div class="row" style="margin: 1.3rem 0rem;">
+                <div class="col-sm-8 offset-sm-1">
+                    <form method="get" action="">
+                        {% csrf_token %}
+                        <div class="search">
+                            <i class="fa fa-search"></i>
+                            <input type="text" id="ingredient" class="form-control"
+                                    placeholder="Search an ingredient ?" name="search_data">
+                            <button class="btn btn-primary">Search</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-sm-3 d-flex align-items-center justify-content-center">
+                    <a href="/adminuser/add/ingredient/"><button type="submit"
+                            class="btn btn-success d-flex align-items-center justify-content-center m-1"style="width:5rem">Add</button></a>
+            
+                    <a href="/adminuser/fetch/ingredient/"><button type="submit"
+                        class="btn btn-success d-flex align-items-center justify-content-center m-1"style="width:5rem"> Fetch</button></a>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </div>
+    <div class="col-sm"></div>
+</div>
+
+<div class="row">
+    {% if messages %}
+    {% for message in messages %}
+    <center>
+        <h6 style="color: green;">{{message}}</h6>
+    </center>
+    {% endfor %}
+    {% endif %}
+    <!-- Table start here -->
+
+
+    {{message}}
+
+
+    <form method="post" >
+        <table class="table table-light table-striped " >
+            <th></th>
+            <th>Sr. No.</th>
+            <th> ingredient Name</th>
+            <th> Image</th>
+            <th> Edit</th>
+
+            {% for item in data.results %}
+            <tr>
+                <td></td>
+                <td>{{forloop.counter}}</td>
+                <td>{{item.name}}</td>
+
+                <td> 
+                    {% if item.image2  %}
+                    <img src="{{item.image2}}" height="50px" alt="ingredient Image">
+
+                    {% else  %}
+                    <img src="{{item.image}}" height="50px" alt="ingredient Image">
+
+                    {% endif %}
+                </td>
+
+
+                <td>
+                    <a href="/adminuser/update/ingredient/{{item.id}}"><button type="button"
+                            class="btn btn-warning">Update</button></a>&nbsp
+                    <a href="/adminuser/delete/ingredient/{{item.id}}"><button type="button" class="btn btn-danger"
+                            style="background-color: red; ">Delete</button></a>
+                </td>
+
+            </tr>
+            {% endfor %}
+
+        </table>
+    </form>
+
+
+
+
+    <!-- Table end here -->
+
+  
+  <div class="pagination">
+      <span class="step-links">
+          {% if data.previous %}
+              <a href="?page=1">&laquo; first</a>
+              <a href="{{data.previous}}">previous</a>
+          {% endif %}
+
+          <span class="current">
+              Page {{ data.page }} of {{ data.last_page}}
+          </span>
+  
+          {% if data.next %}
+              <a href="{{ data.next }}">next</a>
+              <a href="?page=last">last &raquo;</a>
+          {% endif %}
+      </span>
+  </div>
+
+
+
+      
+</div>
+</div>
+{% endblock %}
