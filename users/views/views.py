@@ -109,9 +109,7 @@ class Login(APIView):
 
 
 
-class Home(APIView):
-    def get(self, request):
-        return render(request, "navbar_sidebar.html")
+
 
 
 class LogOutUser(APIView):
