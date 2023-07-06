@@ -1,5 +1,6 @@
 from users.models import User, UserProfile
 from rest_framework import serializers
+from adminuser.models import Recipe
 
 
 
@@ -24,3 +25,11 @@ class UserSerializer(serializers.ModelSerializer):
         UserProfile.objects.create(user = user, **profile)
         return user 
 
+
+
+
+class RecipeListSerializer(serializers.ModelSerializer):
+    category_name=serializers.CharField(source='category.name', read_only=True)
+    class Meta:
+        model = Recipe
+        fields = ["id","name","thumbnail","category_name",]

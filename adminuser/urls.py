@@ -1,9 +1,7 @@
 from django.urls import path
 from adminuser.views.category import AddCategory,DeleteCategory,ListCategory,FetchCategory,UpdateCategory
 from adminuser.views.ingredient import AddIngredient,DeleteIngredient,ListIngredient,FetchIngredient,UpdateIngredient
-from adminuser.views.recipe import AddRecipe ,ListRecipe
-from adminuser.views.recipeDescription import Description ,AddRecipeToDB ,DescriptionDB
-
+from adminuser.views.recipe import AddRecipe ,ListRecipe,Description ,AddRecipeToDB ,DescriptionDB,DeleteRecipe
 
 urlpatterns=[
 
@@ -26,6 +24,8 @@ urlpatterns=[
     #############RECIPE################
     path("recipe/",ListRecipe.as_view()),
     path("add/recipe/",AddRecipe.as_view()),
+    path("delete/recipe/",DeleteRecipe.as_view()),
+
     # path("delete/ingredient/<int:id>",DeleteIngredient.as_view()),
     # path("fetch/ingredient/",FetchIngredient.as_view()),
     # path("update/ingredient/<int:id>",UpdateIngredient.as_view()),
