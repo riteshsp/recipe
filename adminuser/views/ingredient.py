@@ -12,22 +12,24 @@ import math
 
         
 
-# class ListIngredient(APIView, PageNumberPagination):
+# class ListIngredient(APIView):
   
-#     def get(self,request):
-        
+#     def get(self,request):        
 #         try:
 #             name=request.GET.get("search_data" , "")
 #             ingredient=Ingredient.objects.filter(name__icontains=name)
-#             self.page_query_param = 'page'
-#             self.page_size=10
-#             results = self.paginate_queryset( ingredient,request, view=self)
+#             paginator = PagePagination()
+#             results = paginator.paginate_queryset( ingredient , request , view=self)
 #             serializer= IngredientSerializer(results ,many=True)
-#             return render(request,"ingredient/ingredient.html" ,{'data':serializer.data})
+#             page_number=request.GET.get("page","")
+#             data = paginator.get_paginated_response(serializer.data).data
+#             data["page"]=page_number
+#             data["last_page"]=math.ceil(ingredient.count()/paginator.get_page_size(request))
+            
+#             return render(request,"ingredient/ingredient.html" ,{'data':data})
 #         except Exception as e:
+#             # return Response(str(e))
 #             return render(request,"ingredient/ingredient.html" ,{'errors':str(e)})
-
-
 
 
 class ListIngredient(APIView):
@@ -35,21 +37,20 @@ class ListIngredient(APIView):
     def get(self,request):        
         try:
             name=request.GET.get("search_data" , "")
-            ingredient=Ingredient.objects.filter(name__icontains=name)
+            ingredient = Ingredient.objects.filter(name__icontains=name)
+            serializer = IngredientSerializer(ingredient , many=True)
+            for index, item in enumerate(serializer.data):
+                item['srno'] = index+1
             paginator = PagePagination()
-            results = paginator.paginate_queryset( ingredient , request , view=self)
-            serializer= IngredientSerializer(results ,many=True)
-            page_number=request.GET.get("page","")
-            data = paginator.get_paginated_response(serializer.data).data
+            results = paginator.paginate_queryset( serializer.data , request , view=self)
+            page_number=request.GET.get("page","1")
+            data = paginator.get_paginated_response(results).data
             data["page"]=page_number
             data["last_page"]=math.ceil(ingredient.count()/paginator.get_page_size(request))
+
             return render(request,"ingredient/ingredient.html" ,{'data':data})
         except Exception as e:
-            # return Response(str(e))
             return render(request,"ingredient/ingredient.html" ,{'errors':str(e)})
-
-
-
 
 
 
@@ -76,6 +77,7 @@ class AddIngredient(APIView):
                 return render(request, "ingredient/add_ingredient.html", {"errors": serializer.errors})    
         except Exception as e:
             return render(request, 'ingredient/add_ingredient.html', {"errors": str(e)})
+
 
 class FetchIngredient(APIView):
     def get(self,request):        

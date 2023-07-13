@@ -13,6 +13,7 @@ from django.contrib import messages
 class ListRecipe(APIView):
     def get(self,request):
         try:
+            
             name=request.GET.get("search_data","")
             recipe=Recipe.objects.filter(name__icontains=name)
             paginator = PagePagination()
@@ -23,6 +24,7 @@ class ListRecipe(APIView):
             data = paginator.get_paginated_response(serializer.data).data
             data["page"]=page_number
             data["last_page"]=math.ceil(recipe.count()/paginator.get_page_size(request))
+
             for item in data['results']:
                 if item['thumbnail'].startswith("/http"):
                     item['thumbnail'] = item['thumbnail'][1:]
@@ -80,21 +82,21 @@ class Description(APIView):
             data = requests.get(
                 f'https://www.themealdb.com/api/json/v1/1/lookup.php?i={id}')
             data = json.loads(data.content)
-
-
+            data = data['meals'][0]
             ingredient = {}
             for num in range(1,21):
                 item1 = "strIngredient"+str(num)
                 item2 = "strMeasure"+str(num)
-
-                if data["meals"][0][item1] and data["meals"][0][item2]:
-                    ingredient[data["meals"][0][item1]]=data["meals"][0][item2]
+                if data[item1] and data[item2]:
+                    ingredient[data[item1]]=data[item2]
                 else:
                     pass
-            data['meals'][0]["ingredient"] = ingredient
-            data['meals'][0]["searchMeals"] = recipedata["meals"][0:6]
-
-            return render(request, "recipe/recipe_description.html", {"data": data['meals'][0]})
+            data["ingredient"] = ingredient
+            try:
+                data["searchMeals"] = recipedata["meals"][0:6]
+            except Exception as e:
+                pass
+            return render(request, "recipe/recipe_description.html", {"data": data})
         except Exception as e :
             return render(request, "recipe/recipe_description.html", {"errors": str(e)})
 
@@ -114,14 +116,13 @@ class AddRecipeToDB(APIView):
             recipe = Recipe.objects.filter(idMeal=id)
 
             if recipe:
-                messages.success(
-                    request, "Recipe alrea'.dy exists, Try another recipe")
+                messages.success(request, "Recipe already exists, Try another recipe")
                 return redirect('/adminuser/add/recipe/')
-
             else:
-                if Category.objects.filter(name=data['strCategory']).exists():
-                    category_object = Category.objects.get(
-                        name=data['strCategory'])
+                try:
+                    Category.objects.create(name = data['strCategory'] ,categoryImage = "/static/No_Image.jpg")
+                except:
+                    category_object = Category.objects.get(name=data['strCategory'])
                     recipe_object = Recipe.objects.create(name=data['strMeal'], thumbnail=data['strMealThumb'], idMeal=data['idMeal'], is_approved=True, user=User.objects.get(
                         roles__name="admin"), category=category_object,description=data['strInstructions'],youtube_link=data['strYoutube'])
                     for num in range(1,21):
@@ -134,15 +135,15 @@ class AddRecipeToDB(APIView):
                             if ingredient:
                                 Recipe_Ingredient.objects.create(ingredient=ingredient,recipe=recipe_object,quantity= data[item2])
                             else:
-                                return("ingredient doesn't exist")   
+                                ingredient = Ingredient.objects.create(name = data[item1], image = "/static/No_Image.jpg")
+                                Recipe_Ingredient.objects.create(ingredient=ingredient,recipe=recipe_object,quantity= data[item2])      
                         else:
                             pass
                     messages.success(request, "Recipe added successfully !!!")
                     return redirect('/adminuser/recipe/')
-                else:
-                    return Response('create category first')
-
+                
         except Exception as e:
+            print(str(e))
             return render(request, "recipe/recipe_description.html", {"errors": str(e)})
 
 
@@ -163,10 +164,22 @@ class DescriptionDB(APIView):
                 item['thumbnail'] = item['thumbnail'].replace("%3A", ":/")
             else:
                 pass
+          
+            recipe = Recipe.objects.filter(category__name = item['category']).values('id','name','thumbnail','category')
+            print(recipe)
+            try:
+                item['similar_items']=list(recipe)   
+            except Exception as e:
+                pass       
             return render(request, "recipe/recipe_descriptionDB.html", {"data": item})
         
         except Exception as e:
-            return render(request, "recipe/recipe_descriptionDB.html",{"errors": str(e)})
+            return render(request, "recipe/recipe_descriptionDB.html", {"errors": str(e)})
+
+
+
+
+
 
 
 
