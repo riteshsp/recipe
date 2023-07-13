@@ -29,7 +29,7 @@
     <div class="container">
         <div class="row gx-5">
             <aside class="col-lg-6">
-                <div class="  mb-3 d-flex justify-content-center">
+                <div class="  mb-3 d-flex justify-content-center border p-3" style="background-color: white;">
 
                     <center>
                         <img style="max-width: 100%; max-height: 100vh; margin: auto; width: 60%; border-radius: 15px;"
@@ -59,7 +59,7 @@
                     <hr/>
 
                     <a href="/adminuser/add/recipe/toDB/?idMeal={{data.idMeal}}" class="btn btn-success p-3"
-                        style="background-color: rgb(0, 165, 0);"> <b>Add This
+                        style="background-color: rgb(205, 92, 0); border:none" > <b>Add This
                             Recipe </b></a>
                 </div>
             </main>
@@ -75,14 +75,14 @@
                 <div class="border rounded-2 px-3 py-2 bg-white">
                     <!-- Pills navs -->
 
-                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#description" aria-expanded="true" aria-controls="description" style="width: 48%; margin: 0% 1%;">Instructions</button>
-                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="true" aria-controls="description ingredients" style="width: 48%;">Ingredients</button>
+                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#description" aria-expanded="true" aria-controls="description" style="width: 48%; margin: 0% 1%; background-color: rgb(231, 84, 43); border: none;">Instructions</button>
+                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target=".multi-collapse" aria-expanded="true" aria-controls="description ingredients" style="width: 48%; background-color: rgb(231, 84, 43); border:none">Ingredients</button>
                     <div class="collapse multi-collapse show" id="description">
                         <div class="card card-body">
                             {{data.strInstructions}}     
                         </div>
                     </div>
-                    <div class="collapse multi-collapse" id="ingredients">
+                    <div class="collapse multi-collapse show" id="ingredients">
                         <div class="card card-body">
                             <table class="table table-striped">
                                 <thead>

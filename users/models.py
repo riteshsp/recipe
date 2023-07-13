@@ -6,9 +6,10 @@ from django.contrib.auth.models import AbstractUser
 
 class Roles(models.Model):
     name = models.CharField(max_length=100, blank=False)
-
     def __str__(self):
         return self.name
+    
+
 
 class User(AbstractUser):
     roles = models.ForeignKey(Roles, on_delete=models.PROTECT, null=True ,default = 2 )

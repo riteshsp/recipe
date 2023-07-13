@@ -4,9 +4,9 @@ from users.models import User
 
 
 class Ingredient(models.Model):
-    name = models.CharField(max_length=255,unique=True)
+    name = models.CharField(max_length=255, unique=True)
     image = models.ImageField(upload_to='static/ingredients/')
-    id_ingrediant = models.CharField(max_length=255)
+    id_ingrediant = models.CharField(max_length=255, null=True, blank = True )
 
 
 
@@ -31,6 +31,7 @@ class Recipe(models.Model):
     description = models.TextField()
     youtube_link = models.CharField(max_length=255, null=True)
     dateModified =models.DateField(auto_now_add=True)
+    is_active = models.BooleanField(default = True)
 
 
 
@@ -38,6 +39,7 @@ class Recipe(models.Model):
 class Rating(models.Model):
     recipe = models.ForeignKey(Recipe, null=True ,blank=True ,related_name= 'rating',on_delete=models.PROTECT)
     rating = models.IntegerField(choices=[(1,1),(2,2),(3,3),(4,4),(5,5)])
+    user = models.ForeignKey(User, related_name='rating', on_delete=models.PROTECT)
 
 
 
@@ -59,3 +61,8 @@ class Reports(models.Model):
 class Request(models.Model):
     name = models.CharField(max_length=255)
     description= models.CharField(max_length=255)
+
+
+class Favourites(models.Model):
+    user = models.ForeignKey(User, null=True ,blank=True ,related_name = 'favourites',on_delete=models.PROTECT)
+    recipe = models.ForeignKey(Recipe, null=True ,blank=True ,related_name = 'favourites',on_delete=models.PROTECT)

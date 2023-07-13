@@ -168,9 +168,7 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'riteshp.softprodigy@gmail.com'
 EMAIL_HOST_PASSWORD = 'kzjfogvcgsljnqmd'
-
-
-
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 
+LOGIN_URL = '/'

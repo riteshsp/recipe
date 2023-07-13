@@ -11,38 +11,63 @@ import json
 import math
 
 
+
+
 class ListCategory(APIView):
     def get(self,request):
         try:
 
             name=request.GET.get("search_data","")
             category=Category.objects.filter(name__icontains=name)
+            serializer= CategorySerializer(category ,many=True)
+            for index, item in enumerate(serializer.data):
+                item['srno'] = index+1
+
             paginator = PagePagination()
-            results = paginator.paginate_queryset( category , request , view=self)
-            serializer= CategorySerializer(results ,many=True)
-            page_number=request.GET.get("page","")
-            data = paginator.get_paginated_response(serializer.data).data
+            results = paginator.paginate_queryset( serializer.data , request , view=self)
+            page_number=request.GET.get("page","1")
+            data = paginator.get_paginated_response(results).data
             data["page"]=page_number
             data["last_page"]=math.ceil(category.count()/paginator.get_page_size(request))
             
-            for item in serializer.data:
-
+            for item in results:
                 if item['categoryImage'].startswith("/http"):
                     item['categoryImage'] = item['categoryImage'][1:]
                     item['categoryImage'] = item['categoryImage'].replace("%3A",":/")
                 else:
                     pass
-
-
             return render(request,"category.html" ,{'data': data})
-            # return Response(serializer.data)
-
         except Exception as e:
             return Response(str(e))
 
 
 
 
+# class ListCategory(APIView):
+#     def get(self,request):
+#         try:
+
+#             name=request.GET.get("search_data","")
+#             category=Category.objects.filter(name__icontains=name)
+#             paginator = PagePagination()
+#             results = paginator.paginate_queryset( category , request , view=self)
+#             serializer= CategorySerializer(results ,many=True)
+#             page_number=request.GET.get("page","")
+#             data = paginator.get_paginated_response(serializer.data).data
+#             data["page"]=page_number
+#             data["last_page"]=math.ceil(category.count()/paginator.get_page_size(request))
+            
+#             for item in serializer.data:
+#                 if item['categoryImage'].startswith("/http"):
+#                     item['categoryImage'] = item['categoryImage'][1:]
+#                     item['categoryImage'] = item['categoryImage'].replace("%3A",":/")
+#                 else:
+#                     pass
+#             return render(request,"category.html" ,{'data': data})
+#             # return Response(serializer.data)
+
+#         except Exception as e:
+#             return Response(str(e))
 
 
 

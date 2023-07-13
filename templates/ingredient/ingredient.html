@@ -91,7 +91,7 @@
 
 
     <form method="post" >
-        <table class="table table-light table-striped " >
+        <table class="table table-light table-striped " id="ingredient-table">
             <th></th>
             <th>Sr. No.</th>
             <th> ingredient Name</th>
@@ -101,7 +101,7 @@
             {% for item in data.results %}
             <tr>
                 <td></td>
-                <td>{{forloop.counter}}</td>
+                <td>{{item.srno}}</td>
                 <td>{{item.name}}</td>
 
                 <td> 
@@ -131,10 +131,43 @@
 
 
 
-    <!-- Table end here -->
+    <!-- pagination -->
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+           <li class="page-item"><a class="page-link" href="?page=1">first</a></li>
+
+           {% if data.previous %}
+
+          <li class="page-item">
+            <a class="page-link" href="{{data.previous}}" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+              <span class="sr-only">Previous</span>
+            </a>
+          </li>
+          <li class="page-item"><a class="page-link" href="?page={{data.page | add:'-1'}}">{{ data.page | add:"-1" }}</a></li>
+         {% endif %}
+
+          <li class="page-item"><a class="page-link" href="#">{{ data.page }}</a></li>
+
+          {% if data.next %}
+
+          <li class="page-item"><a class="page-link" href="?page={{data.page | add:'+1'}}">{{ data.page | add:"+1"}}</a></li>
+          <li class="page-item">
+            <a class="page-link" href="{{ data.next }}" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+              <span class="sr-only">Next</span>
+            </a>
+          </li>
+          {% endif %}
+          <li class="page-item"><a class="page-link" href="?page={{data.last_page}}">last</a></li>
+
+        </ul>
+      </nav>
+
 
   
-  <div class="pagination">
+  <!-- <div class="pagination">x
       <span class="step-links">
           {% if data.previous %}
               <a href="?page=1">&laquo; first</a>
@@ -150,11 +183,12 @@
               <a href="?page=last">last &raquo;</a>
           {% endif %}
       </span>
-  </div>
+  </div> -->
 
 
 
       
 </div>
 </div>
+
 {% endblock %}

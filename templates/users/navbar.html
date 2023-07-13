@@ -11,6 +11,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
+
+    <script src="https://kit.fontawesome.com/3dc58e41e7.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
@@ -98,9 +100,9 @@
 
 
         <div class="input-group rounded " style="width: 25rem;">
-            <form action="" class="d-flex align-items-center">
+            <form action="/search/recipe/" class="d-flex align-items-center">
                 <input type="search" class="form-control rounded" style="height: 42px; width: 25rem;"
-                    placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                    placeholder="Search" aria-label="Search" required aria-describedby="search-addon" name="search_data" value="{{data.search_data}}"/>
                 <span class="input-group-text border-0 p-0" id="search-addon">
 
                     <button type="button " style="border: 0px; background-color:  #fc7f1900;"><i class='bx bx-search'
@@ -113,20 +115,24 @@
 
 
         <div class="d-flex align-items-center">
-            <div>
+                <strong class="d-none d-sm-block ms-1 p-3 ">Add Recipe</strong>
                 <strong class="d-none d-sm-block ms-1 p-3 ">My Recipes</strong>
-            </div>
             <div class="nav-item me-3 me-lg-1 dropdown">
                 <a class="nav-link d-sm-flex align-items-sm-center " type="button" id="dropdownMenuButton"
                     data-mdb-toggle="dropdown" aria-expanded="false" href="#">
                     <strong class="d-none d-sm-block " style="color:black">Profile</strong>&nbsp
 
-                    <img src="https://mdbcdn.b-cdn.net/img/new/avatars/1.webp" class="rounded-circle" height="50"
+                    <img src="/static/user.png" class="rounded-circle" height="50"
                         alt="Profile pic" loading="lazy" />
                 </a>
                 <ul class="dropdown-menu " aria-labelledby="dropdownMenuButton" style="width: 0.2rem;">
                     <li><a class="dropdown-item" href="#">Profile</a></li>
-                    <li><a class="dropdown-item" href="#">Log Out</a></li>
+                    <li><a class="dropdown-item" href="/favourites/">My Favourites</a></li>
+                    {% if user.is_authenticated %}
+                    <li><a class="dropdown-item" href="/logout">Log Out</a></li>
+                    {% else %}
+                    <li><a class="dropdown-item" href="/">Register/Login</a></li>
+                    {% endif %}
                     <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
                 </ul>
             </div>
@@ -135,13 +141,13 @@
 
     </nav>
 
+
     {% block content %}
 
     {% endblock %}
 
 
-
-    <footer class="text-center text-white" style="background-color: rgb(77, 31, 31);">
+    <footer class="text-center text-white" style="background-color: rgb(77, 31, 31); position:relative; bottom:0rem;  width: 100%;;">
         <div class="container p-4 pb-0">
           <section class="">
             <form action="">

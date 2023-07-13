@@ -1,0 +1,40 @@
+{% extends "users/navbar.html" %}
+{% block content %}
+
+{% if data.results %}
+<div class="row p-5">
+
+    <div class="row p-1">
+        <h4>Search items: </h4>
+        <hr>
+    </div>
+    {% for item in data.results %}
+    <div class="card col-sm-3" style="margin: 1.4rem 1.8rem; height: 100%;width: auto;">
+        <a href="/adminuser/recipe/description/?id={{item.id}}">
+
+            <img class="card-img-top" src="{{item.thumbnail}}"
+                style="border-radius: 5px ; object-fit: cover; height:17rem" alt="Dish Picture">
+            <div class="row recipe-edit" style="padding: 8px; height: 100%; ">
+                <center>
+                    <h6 class="card-text m-1">{{item.name}}</h6>
+                
+                    <div class="d-flex justify-content-center">
+                        <div>
+                            <p style="color: rgb(134, 134, 141); font-weight: 500;" class="card-text">Category:
+                                {{item.category_name}}</p>
+                        </div>
+                    </div>
+                </center>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+    
+</div>
+{% else %}
+<h3 style="color: grey; margin:13%">No records found :(</h3>
+{% endif %}
+
+
+
+{% endblock %}

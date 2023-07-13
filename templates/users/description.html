@@ -1,27 +1,41 @@
 <!-- Jumbotron -->
 
-{% extends 'navbar_sidebar.html' %}
+{% extends 'users/navbar.html' %}
 
 {% block content %}
 
 <!-- Jumbotron -->
 
-<!-- Heading -->
+<style>
+.product-rating{
+    font-size: 35px;
+}
+
+.stars i{
+    font-size: 18px;
+    color: #cad100;
+}
+</style>
+
+
+
 <div>
     <div class="container py-2" style="background-color: #E7E9EB;">
         <nav class="d-flex">
             <h6 class="mb-0">
-                <a href="/adminuser/recipe/">Recipes</a>
+                <a href="/home">Home</a>
                 <span class=" mx-2"> > </span>
                <u>Details</u>
             </h6>
         </nav>
-        <!-- Breadcrumb -->
+
+ <!-- Breadcrumb -->
+
     </div>
 </div>
-<!-- Heading -->
+
 </header>
-{{errors}}
+
 <!-- content -->
 <section class="py-5">
     <div class="container">
@@ -35,6 +49,8 @@
                     </center>
                 </div>
             </aside>
+
+
             <main class="col-lg-6">
                 <div class="ps-lg-3">
                     <h4 class="title text-dark">
@@ -45,25 +61,38 @@
                     background: linear-gradient(90deg, rgba(209,226,0,1) 0%, #ece8e3 99%);">
                         <span class="h6">Category :</span>
                         <span id="category">{{data.category}}</span>
-                    </div><br><br>
+                    </div><br>
                     <p>
-                        To add this recipe to database click on the button "Add This Recipe" below for your clients
-                    </p>
-
-
-                    <!-- <div class="row">
-                        <dt class="col-3">Tags:</dt>
-                        <dd class="col-9">{{data.strTags}}</dd>
-                    </div> -->
-
+                        “Food for us comes from our relatives, whether they have wings or fins or roots. That is how we consider food. Food has a culture. It has a history. It has a story. It has relationships.”                    </p>
 
                     <hr/>
 
-                    <a href="/adminuser/add/recipe/toDB/?idMeal={{data.idMeal}}" class="btn btn-danger p-3"
-                        style="background-color: var(--orange); margin-right :1rem"> <b>Update </b></a>
+                    <div class="ratings">
 
-                    <!-- <a onclick="DeleteRecipe()" class="btn btn-danger p-3"> <b>Delete</b></a> -->
-                    <button class="btn btn-danger" onclick="DeleteRecipe()">Delete</button>
+                        <span class="product-rating">4.6</span><span>/5</span>
+                        <div class="stars">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+
+                        </div>
+
+                        <div class="rating-text">
+                            <span>46 ratings & reviews</span>
+                        </div><br>
+                    </div>
+
+                    {% if data.isFavourite %}
+                    <a  href="/favourites"  class="btn btn-success p-3"
+                        style="margin-right :1rem; border:none"> <b>View in favourite &nbsp</b></a>
+
+                    {% else %}
+                    <a  onclick="addtofavourite('{{data.id}}')" class="btn btn-danger p-3"
+                        style="margin-right :1rem; border:none"> <b>Add to favourite &nbsp</b><i class="fa-solid fa-heart" style="color: #ffffff;"></i></a>
+                    {% endif %}
+                    
                     
                 </div>
             </main>
@@ -73,7 +102,7 @@
 <!-- content -->
 
 
-
+<!-- description Ingredient -->
 
 <section class="bg-light border-top py-4">
     <div class="container">
@@ -112,6 +141,15 @@
                     </div>
                     <!-- Pills content -->
 
+<!-- youtube_link -->
+
+                    {% if data.youtube_link %}
+                    <div class="card" style="margin: 1rem 0rem;text-align: center ; color: brown;">
+                        <div class="card-body">
+                            <h5>To watch video tutorial, Click on <a href="{{data.youtube_link}}" target="_blank"><img src="/static/youtube.png" alt="youtube icon" height="50px"></a></h5>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
 
@@ -130,7 +168,7 @@
 
                             {% else%}
                             <a
-                                href="/adminuser/recipe/description/?id={{items.id}}">
+                                href="/recipe/description/?id={{items.id}}">
                                 <div class="d-flex align-items-center mb-3">
                                     <div class="me-3">
                                         <img src="{{items.thumbnail}}" style="min-width: 96px; height: 96px;"
@@ -150,31 +188,24 @@
         </div>
     </div>
 </section>
+
+
+
+
 <script>
-   function DeleteRecipe(){
 
-        Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.fire(
-            'Deleted!',
-            'Your file has been deleted.',
-            'success'
-            ).then(() => {
-                window.open("/adminuser/delete/recipe/?id={{data.id}}")
-            }
-            )
-        }
-        })
-
-   }
+function addtofavourite(id){
+    Swal.fire({
+  icon: 'success',
+  title: 'Added to favourite',
+  showConfirmButton: false,
+  timer: 1500,
+  
+}).then(res => {
+    window.open(`/add/tofavourite/?id=${id}`,'_self');
+    
+})
+}
 
 </script>
 {% endblock %}
