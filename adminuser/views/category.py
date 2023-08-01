@@ -6,6 +6,8 @@ from adminuser.models import Category
 from django.contrib import messages
 from django.shortcuts import redirect
 from recipe.pagination import PagePagination
+from django.contrib.auth.mixins import LoginRequiredMixin
+from rest_framework.permissions import IsAdminUser
 import requests
 import json
 import math
@@ -13,7 +15,8 @@ import math
 
 
 
-class ListCategory(APIView):
+class ListCategory(LoginRequiredMixin,APIView):
+    permission_classes =[IsAdminUser]
     def get(self,request):
         try:
 
@@ -71,7 +74,8 @@ class ListCategory(APIView):
 
 
 
-class AddCategory(APIView):
+class AddCategory(LoginRequiredMixin,APIView):
+    permission_classes =[IsAdminUser]
     def get(self,request):
         category=Category.objects.all()
         serializer= CategorySerializer(category ,many=True)
@@ -97,7 +101,8 @@ class AddCategory(APIView):
             return Response(str(e))
 
 
-class FetchCategory(APIView):
+class FetchCategory(LoginRequiredMixin,APIView):
+    permission_classes =[IsAdminUser]
     def get(self,request):
         
         try:
@@ -123,7 +128,8 @@ class FetchCategory(APIView):
 
 
 
-class DeleteCategory(APIView):
+class DeleteCategory(LoginRequiredMixin,APIView):
+    permission_classes =[IsAdminUser]
     def get(self,request,id):
         item=Category.objects.get(id=id)
         item.delete()
@@ -133,7 +139,8 @@ class DeleteCategory(APIView):
   
 
 
-class UpdateCategory(APIView):
+class UpdateCategory(LoginRequiredMixin,APIView):
+    permission_classes =[IsAdminUser]
     def get(self, request, id):
         category = Category.objects.get(id=id)
         serializer = CategorySerializer(category)

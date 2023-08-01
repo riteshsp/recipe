@@ -20,17 +20,21 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.css">
 
-  
+
   <script src="https://kit.fontawesome.com/3dc58e41e7.js" crossorigin="anonymous"></script>
   <style>
     :root {
       --yellow: #FFC300;
       --orange: #FF7518;
-      --light_orange: #FBCEB1	;
-      --dark_orange: 	#FF5733 ;
+      --light_orange: #FBCEB1;
+      --dark_orange: #FF5733;
+      --brown: rgb(77, 31, 31);
     }
 
-
+    .btn-primary {
+      background-color: var(--brown) !important;
+      border: none
+    }
 
     .main_nav {
       display: flex;
@@ -66,105 +70,90 @@
       text-decoration: none;
     }
 
-    .sidebar-item i{
+    .sidebar-item i {
       font-size: 2rem;
       font-weight: 500;
     }
 
-    a{
-      text-decoration: none; 
-      color: inherit;     
+    a {
+      text-decoration: none;
+      color: inherit;
 
     }
 
     .sidebar-item:hover {
-      background-color: burlywood;
-      
+      /* background-color: burlywood; */
+      background-color: rgb(122, 49, 49)
     }
 
     /* recipe search bar */
     .search {
       margin: 0.5rem 0rem;
-        position: relative;
-        /* box-shadow: 0 0 40px rgba(51, 51, 51, .1); */
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+      position: relative;
+      /* box-shadow: 0 0 40px rgba(51, 51, 51, .1); */
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     }
-    
-    a{
+
+    a {
       text-decoration: none;
       color: inherit;
     }
 
-    a:hover{
-      color:brown
+    a:hover {
+      color: brown
     }
 
     .search input {
-        height: 60px;
-        text-indent: 25px;
-        border: 2px solid #d6d4d4;
+      height: 60px;
+      text-indent: 25px;
+      border: 2px solid #d6d4d4;
     }
 
     .search input:focus {
-        box-shadow: none;
-        border: 2px solid rgb(255, 136, 0);
+      box-shadow: none;
+      border: 2px solid rgb(255, 136, 0);
     }
 
     .search .fa-search {
-        position: absolute;
-        top: 20px;
-        left: 16px;
+      position: absolute;
+      top: 20px;
+      left: 16px;
     }
 
     .search button {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        height: 50px;
-        width: 110px;
-        background: rgb(255, 136, 0);
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      height: 50px;
+      width: 110px;
+      background: rgb(255, 136, 0);
 
     }
 
-    .btn-success {
-        color: #fff;
-        background-color: #00ab5c;
-        border-color: #198754;
-        height: 56px;
-    }
-
-
-    /* recipe search bar ends */
-    /* @media (min-width: 768px){
-      .col-md-3 {
-      flex: 0 0 auto;
-      width: 18%;
-    }
-    }  */
+    /* .btn-success {
+      color: #fff;
+      background-color: #00ab5c;
+      border-color: #198754;
+      height: 56px;
+    } */
   </style>
-  
-  <div class="row" >
+
+  <div class="row">
     <div class="col-sm-12">
-      <nav class=" main_nav nav navbar navbar-expand-lg" style = "padding:0; z-index: 1;
-      background-color: #ba2d0b;
-      background-image: linear-gradient(319deg, #ba2d0b 0%, #fe7f2d 37%, #faeed7 100%);">
+
+      <nav class=" main_nav nav navbar navbar-expand-lg" style="padding:0; z-index: 1;
+      background-color: #ffac81;
+  background-image: linear-gradient(315deg, #ffac81 0%, #ff928b 74%);">
 
         <div>
-          <a class="navbar-brand  d-flex align-items-center" href="#">
+          <a class="navbar-brand  d-flex align-items-center" href="/adminuser/recipe/">
             <img src="/static/logo.png" height="40px" style="padding-left: 1rem; margin: 0.2rem;" alt="Logo"
-              loading="lazy"/>
+              loading="lazy" />
           </a>
         </div>
 
         <div>
-          <li class="nav-item me-3 me-lg-1">
-            <a class="nav-link d-sm-flex align-items-sm-center" href="#">
-              <strong class="d-none d-sm-block ms-1 text-white">Profile</strong>&nbsp
-
-              <img src="https://mdbcdn.b-cdn.net/img/new/avatars/1.webp" class="rounded-circle" height="50"
-                alt="Black and White Portrait of a Man" loading="lazy" />
-            </a>
-          </li>
+          <h5 class="text-white mx-4"> Hello Admin &nbsp <a href="/logout"><i class="fa-solid fa-right-from-bracket" title="Logout" style="color: #ffffff;"></i></a></h5>
         </div>
       </nav>
     </div>
@@ -173,41 +162,53 @@
 
   <div class="row">
     <div class="col-sm-2">
-      <div class="sidebar" style="background-color: #ff6600 ; width: 13%; ">
-
+      <div class="sidebar" style="background-color: rgb(77, 31, 31) ; width: 13%; ">
+        <a href="/home" style="color: white;">
         <div style="color: white;" class="sidebar-item">
-          <i class='bx bxs-widget' style="font-size: 2.5rem;"></i> 
-        </div>
+          <i class='bx bxs-widget' style="font-size: 2.5rem;"></i>&nbsp View UserPanel
+        </div></a>
 
-        <a href="/adminuser/category/" style="color: white;"><div class="sidebar-item">
-          <i class='bx bx-layer nav_logo-icon'></i> &nbsp Category
-        </div></a>
-        <a href="/adminuser/ingredient/" style="color: white;"><div class="sidebar-item">
-          <i class='bx bx-bowl-rice'></i> &nbsp Ingredients
+        <a href="/adminuser/category/" style="color: white;">
+          <div class="sidebar-item">
+            <i class='bx bx-layer nav_logo-icon'></i> &nbsp Category
+          </div>
+        </a>
+        <a href="/adminuser/ingredient/" style="color: white;">
+          <div class="sidebar-item">
+            <i class='bx bx-bowl-rice'></i> &nbsp Ingredients
 
-        </div></a>
-        <a href="/adminuser/recipe/" style="color: white;"><div class="sidebar-item">
-          <i class='bx bx-dish'></i> &nbsp Recipes
-        </div></a>
-        <a href="/products/brands" style="color: white;"><div class="sidebar-item">
-          <i class='bx bxs-hourglass-top'></i> &nbsp Requests
-        </div></a>
-        <a href="/products/categories" style="color: white;"><div class="sidebar-item">
-          <i class='bx bx-message-square-dots'></i> &nbsp Approvals
-        </div> </a>       
-        <a href="#" style="color: white;"><div class="sidebar-item">
-          <i class='bx bxs-report'></i> &nbsp Reports
-        </div></a>
+          </div>
+        </a>
+        <a href="/adminuser/recipe/" style="color: white;">
+          <div class="sidebar-item">
+            <i class='bx bx-dish'></i> &nbsp Recipes
+          </div>
+        </a>
+        <a href="/adminuser/requests/" style="color: white;">
+          <div class="sidebar-item">
+            <i class='bx bxs-hourglass-top'></i> &nbsp Requests
+          </div>
+        </a>
+        <a href="/adminuser/approvals" style="color: white;">
+          <div class="sidebar-item">
+            <i class='bx bx-message-square-dots'></i> &nbsp Approvals
+          </div>
+        </a>
+        <a href="/adminuser/reports/" style="color: white;">
+          <div class="sidebar-item">
+            <i class='bx bxs-report'></i> &nbsp Reports
+          </div>
+        </a>
       </div>
     </div>
     <div class="col-sm-10 p-3 ">
       {% block content %}
-   
+
       {% endblock %}
     </div>
 
   </div>
- 
+
 
 
 </body>

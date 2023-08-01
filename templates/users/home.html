@@ -22,24 +22,45 @@
     height: 200px;
     object-fit: contain;
   }
+
+  .row {
+    --bs-gutter-x: 0rem
+  }
+
+  .card {
+    box-shadow: 0 3px 10px rgb(2 2 2 / 0.2);
+  }
+
+  .card:hover {
+    box-shadow: 0 0 5px 5px rgb(241, 241, 241);
+    transform: scale(1.04);
+    transition: transform 0.2s ease;
+  }
+
+  .card-img-top {
+    aspect-ratio: 15/16;
+  }
+
+  .trending_img:hover{
+    transform: rotate(360deg);
+    transition: transform 1s ease;
+  }
 </style>
-
-
 
 <div class="row">
 
   <!-- corousal -->
   <div class="row p-0">
-    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" style="
-background-color: #421200; height: 20rem; " data-interval="1000">
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel"
+      style="background-color: #421200; height: 19rem; " data-interval="1500">
 
       <div class="carousel-inner" style="height: 15rem;">
 
         {% for item in data.category %}
         {% if item.categoryImage != '/static/No_Image.jpg' %}
-        <div class="carousel-item  ">
+        <div class="carousel-item">
           <a href="/search/bycategory/?categoryid={{item.id}}" class="d-flex flex-column align-items-center">
-            <img src="{{item.categoryImage}}" class="d-block w-100" alt="...">
+            <img src="{{item.categoryImage}}" class="d-block w-75"  alt="...">
             <strong style="color:var(--yellow) ;">{{item.name}}</strong>
           </a>
         </div>
@@ -56,73 +77,101 @@ background-color: #421200; height: 20rem; " data-interval="1000">
       </button>
     </div>
   </div>
+<!-- corousal ends-->
+<a href="/checkout/"><h5 style="text-align: end; margin: 0px; position: relative; top: 36px; right: 36px; color: red;"><span style="font-size: 30px;">💰</span> Donate us...</h5></a>
+
+  <div class="row p-3">
+    <div class="row " style="margin-bottom: -2rem;">
+      <h3>Trending Recipes</h3>
+      <hr>
+    </div>
+
+
+    <div class="row d-flex justify-content-center">
+      {% for item in trending_recipe %}
+      <div class=" col-sm-2 trending_div" style="margin: 2rem 2rem; width: auto;">
+        <a href="/recipe/description/?id={{item.id}}">
+          <img class="card-img-top rounded-circle trending_img" src="{{item.thumbnail}}"
+            style="border: 10px solid white ; object-fit: cover; height:15rem; width:15rem" alt="Dish Picture">
+          <div class="row recipe-edit" style="padding: 8px; height: 100%; ">
+            <center>
+              <h6 class="card-text m-1">{{item.name}}</h6>
+            </center>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
 
 
 
-  <div class="row p-5" style="margin-top:3rem ;">
-    <h3>Trending Recipes</h3>
-    <hr>
 
 
 
-        {% for item in data.recipe.results %}
-        <div class="card col-sm-3" style="margin: 2rem 1.8rem; height: fit-content;width: auto;">
-          <a href="/recipe/description/?id={{item.id}}">
-
-            <img class="card-img-top" src="{{item.thumbnail}}" style="border-radius: 5px ; object-fit: cover; height:17rem"
-              alt="Dish Picture">
-            <div class="row recipe-edit" style="padding: 8px; height: 100%; ">
-              <center>
-                <h6 class="card-text m-1">{{item.name}}</h6>
-              </center>
-             
-            </div>
-          </a>
-          
-
-        </div>
-
-        {% endfor %}
-
- <!-- pagination -->
-
- <nav aria-label="Page navigation example">
-  <ul class="pagination">
-     <li class="page-item"><a class="page-link" href="?page=1">first</a></li>
-
-     {% if data.recipe.previous %}
-
-    <li class="page-item">
-      <a class="page-link" href="{{data.recipe.previous}}" aria-label="Previous">
-        <span aria-hidden="true">&laquo;</span>
-        <span class="sr-only">Previous</span>
-      </a>
-    </li>
-    <li class="page-item"><a class="page-link" href="?page={{data.recipe.page | add:'-1'}}">{{ data.recipe.page | add:"-1" }}</a></li>
-    
 
 
-    <li class="page-item"><a class="page-link" href="#">{{data.recipe.page}}</a></li>
-    {% endif %}
+    <div class="row mx-5" style="margin-bottom: -2rem;">
+      <h3>Recipes</h3>
+      <hr>
+    </div>
+    <div class="row d-flex justify-content-center">
+      {% for item in data.recipe.results %}
+      <div class="card col-sm-2" style="margin: 2rem 2rem; width: auto;">
+        <a href="/recipe/description/?id={{item.id}}">
 
-    {% if data.recipe.next %}
+          <img class="card-img-top" src="{{item.thumbnail}}"
+            style="border-radius: 5px ; object-fit: cover; height:17rem" alt="Dish Picture">
+          <div class="row recipe-edit" style="padding: 8px; height: 100%; ">
+            <center>
+              <h6 class="card-text m-1">{{item.name}}</h6>
+            </center>
 
-    <li class="page-item"><a class="page-link" href="?page={{data.recipe.page | add:'+1'}}">{{ data.recipe.page | add:"+1"}}</a></li>
-    <li class="page-item">
-      <a class="page-link" href="{{data.recipe.next}}" aria-label="Next">
-        <span aria-hidden="true">&raquo;</span>
-        <span class="sr-only">Next</span>
-      </a>
-    </li>
-    {% endif %}
-    <li class="page-item"><a class="page-link" href="?page={{data.recipe.last_page}}">last</a></li>
-
-  </ul>
-</nav>
-
+          </div>
+        </a>
 
       </div>
 
+      {% endfor %}
+    </div>
+
+    <!-- pagination -->
+
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item"><a class="page-link" href="?page=1">first</a></li>
+
+        {% if data.recipe.previous %}
+
+        <li class="page-item">
+          <a class="page-link" href="{{data.recipe.previous}}" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Previous</span>
+          </a>
+        </li>
+        <li class="page-item"><a class="page-link" href="?page={{data.recipe.page | add:'-1'}}">{{ data.recipe.page |add:"-1" }}</a></li>
+
+
+
+        <li class="page-item"><a class="page-link" href="#">{{data.recipe.page}}</a></li>
+        {% endif %}
+
+        {% if data.recipe.next %}
+
+        <li class="page-item"><a class="page-link" href="?page={{data.recipe.page | add:'+1'}}">{{data.recipe.page|add:"+1"}}</a></li>
+        <li class="page-item">
+          <a class="page-link" href="{{data.recipe.next}}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Next</span>
+          </a>
+        </li>
+        {% endif %}
+        <li class="page-item"><a class="page-link" href="?page={{data.recipe.last_page}}">last</a></li>
+
+      </ul>
+    </nav>
+
+  </div>
+</div>
 
 
 
@@ -132,40 +181,41 @@ background-color: #421200; height: 20rem; " data-interval="1000">
 
 
 
-    <script>
-      var carouselWidth = $(".carousel-inner")[0].scrollWidth;
-      var cardWidth = $(".carousel-item").width();
-      var scrollPosition = 0;
-      $(".carousel-control-next").on("click", function () {
-        console.log(cardWidth, carouselWidth);
 
-        if (scrollPosition < (carouselWidth - cardWidth * 4)) { //check if you can go any further
-          scrollPosition += cardWidth;  //update scroll position
-          $(".carousel-inner").animate({ scrollLeft: scrollPosition }, 600); //scroll left
-        }
-      });
-      $(".carousel-control-prev").on("click", function () {
-        if (scrollPosition > 0) {
-          scrollPosition -= cardWidth;
-          $(".carousel-inner").animate(
-            { scrollLeft: scrollPosition },
-            600
-          );
-        }
-      });
-      var multipleCardCarousel = document.querySelector(
-        "#carouselExampleControls"
+<script>
+  var carouselWidth = $(".carousel-inner")[0].scrollWidth;
+  var cardWidth = $(".carousel-item").width();
+  var scrollPosition = 0;
+  $(".carousel-control-next").on("click", function () {
+    console.log(cardWidth, carouselWidth);
+
+    if (scrollPosition < (carouselWidth - cardWidth * 4)) { //check if you can go any further
+      scrollPosition += cardWidth;  //update scroll position
+      $(".carousel-inner").animate({ scrollLeft: scrollPosition }, 600); //scroll left
+    }
+  });
+  $(".carousel-control-prev").on("click", function () {
+    if (scrollPosition > 0) {
+      scrollPosition -= cardWidth;
+      $(".carousel-inner").animate(
+        { scrollLeft: scrollPosition },
+        600
       );
+    }
+  });
+  var multipleCardCarousel = document.querySelector(
+    "#carouselExampleControls"
+  );
 
 
 
-      setInterval(elementclick, 2500);
-      function elementclick() {
-        document.getElementById("nextbutton").click();
-      }
+  // setInterval(elementclick, 2500);
+  // function elementclick() {
+  //   document.getElementById("nextbutton").click();
+  // }
 
 
-    </script>
+</script>
 
 
-    {% endblock %}
+{% endblock %}

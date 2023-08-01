@@ -40,7 +40,7 @@ class Recipe_IngredientSerializer(serializers.ModelSerializer):
     ingredients = serializers.SerializerMethodField()
     class Meta:
         model = Recipe
-        fields = ["id","name","thumbnail","calculated_rating","category","description","youtube_link","ingredients"]
+        fields = ["id","name","thumbnail","calculated_rating","is_active","category","description","youtube_link","ingredients"]
 
     def get_ingredients(self,obj):
         objects=Recipe_Ingredient.objects.filter(recipe = obj)

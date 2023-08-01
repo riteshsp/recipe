@@ -3,6 +3,10 @@ from adminuser.views.category import AddCategory,DeleteCategory,ListCategory,Fet
 from adminuser.views.ingredient import AddIngredient,DeleteIngredient,ListIngredient,FetchIngredient,UpdateIngredient
 from adminuser.views.recipe import AddRecipe ,ListRecipe,Description ,AddRecipeToDB ,DescriptionDB,DeleteRecipe
 
+from adminuser.views.requests import RequestsList,RequestsUpdateStatus
+from adminuser.views.approvals import ListApprovals,ApproveRecipe,RejectRecipe
+from adminuser.views.reports import ReportsList,ReportsUpdateStatus,ReportsDescription
+
 urlpatterns=[
 
     #############CATEGORY################
@@ -36,6 +40,29 @@ urlpatterns=[
     path("recipe/description/",DescriptionDB.as_view()),
 
     path("add/recipe/toDB/",AddRecipeToDB.as_view()),
+
+
+    #################### REQUESTS ######################
+
+    path("requests/",RequestsList.as_view()),
+    path("requests/updatestatus/",RequestsUpdateStatus.as_view()),
+
+
+
+    #################### APPROVALS ######################
+
+    path("approvals/",ListApprovals.as_view()),
+    path("approve/recipe/",ApproveRecipe.as_view()),
+    path("reject/recipe/",RejectRecipe.as_view()),
+
+
+
+    #################### REPORTS ######################
+
+    path("reports/",ReportsList.as_view()),
+    path("reports/updatestatus/",ReportsUpdateStatus.as_view()),
+    path("recipe/reports/",ReportsDescription.as_view()),
+
 
 
 

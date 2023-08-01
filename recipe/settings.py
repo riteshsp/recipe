@@ -27,7 +27,7 @@ SECRET_KEY = config('SECRET_KEY')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
+# DEBUG = False
 DEBUG = config('DEBUG',cast=bool)
 
 
@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'adminuser',
-    
+    'django_elasticsearch_dsl',
     ]
 
 MIDDLEWARE = [
@@ -162,6 +162,7 @@ def verified_callback(user):
     user.is_active = True
 
 
+
 EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
@@ -170,5 +171,25 @@ EMAIL_HOST_USER = 'riteshp.softprodigy@gmail.com'
 EMAIL_HOST_PASSWORD = 'kzjfogvcgsljnqmd'
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
-
 LOGIN_URL = '/'
+
+# celery setting
+# Use Django database as the result backend
+
+CELERY_BROKER_URL = 'amqp://ritesh:ritesh@localhost:5672/myvhost'
+CELERY_ACCEPT_CONTENT =['json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Kolkata'
+
+
+# ELASTIC SEARCH
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'localhost:9200',  # Update this with the correct Elasticsearch host and port
+    },
+}
+
+STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY')
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
