@@ -3,23 +3,24 @@
 {% block content %}
 
 <style>
-  @media (min-width: 768px) {
-    .carousel-inner {
-      display: flex;
-      margin-top: 3rem;
-    }
-
-    .carousel-item {
-      height: 200px;
-
-      margin-right: 0;
-      flex: 0 0 25%;
-      display: block;
-    }
+  /* @media (min-width: 768px) { */
+  .carousel-inner {
+    display: flex;
+    margin-top: 3rem;
   }
 
-  .carousel-item img {
+  .carousel-item {
     height: 200px;
+    margin-right: 0;
+    flex: 0 0 25%;
+    display: block;
+  }
+
+  /* } */
+
+  .carousel-item img {
+    /* max-height: 200px; */
+    height: 22vh;
     object-fit: contain;
   }
 
@@ -32,53 +33,68 @@
   }
 
   .card:hover {
-    box-shadow: 0 0 5px 5px rgb(241, 241, 241);
-    transform: scale(1.04);
-    transition: transform 0.2s ease;
+    /* box-shadow: 0 0 5px 5px rgb(241, 241, 241); */
+    transform: translate(0px, -10px);
+    transition: transform 0.4s ease;
   }
 
   .card-img-top {
     aspect-ratio: 15/16;
   }
 
-  .trending_img:hover{
+  .trending_img:hover {
     transform: rotate(360deg);
     transition: transform 1s ease;
   }
+
+ 
 </style>
 
-<div class="row">
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.js"></script>
+
+
+
+
+<div class="row">
   <!-- corousal -->
   <div class="row p-0">
-    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel"
-      style="background-color: #421200; height: 19rem; " data-interval="1500">
+    <div id="carouselExampleIndicators" onmouseover="Stopcrousal()" onmouseout="startcrousal()" class="carousel slide"
+      data-bs-ride="carousel" style="background-color: #421200; height: 19rem; ">
 
       <div class="carousel-inner" style="height: 15rem;">
 
         {% for item in data.category %}
         {% if item.categoryImage != '/static/No_Image.jpg' %}
-        <div class="carousel-item">
+        <div class="carousel-item" data-bs-interval="1500" style="display: block;">
           <a href="/search/bycategory/?categoryid={{item.id}}" class="d-flex flex-column align-items-center">
-            <img src="{{item.categoryImage}}" class="d-block w-75"  alt="...">
+            <img src="{{item.categoryImage}}" class="d-block w-100" alt="No Image">
             <strong style="color:var(--yellow) ;">{{item.name}}</strong>
           </a>
         </div>
         {% endif %}
         {% endfor %}
+
       </div>
       <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
-        data-bs-slide="prev" style="height:20rem;z-index: 1;">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        data-bs-slide="prev" style="height:17rem;width:8%">
+        <!-- <span class="carousel-control-prev-icon" aria-hidden="true" style="font-weight: 600;"></span> -->
+        <h1><i class="fa-solid fa-angle-left" style="color: #ffffff;position: absolute; left: 15px;"></i></h1>
       </button>
       <button class="carousel-control-next" type="button" id="nextbutton" data-bs-target="#carouselExampleIndicators"
-        data-bs-slide="next" style="height:20rem;z-index: 1;">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        data-bs-slide="next" style="height:17rem; width:8%">
+        <h1><i class="fa-solid fa-angle-right" style="color: #ffffff; position: absolute; right: 15px;"></i></h1>
       </button>
     </div>
   </div>
-<!-- corousal ends-->
-<a href="/checkout/"><h5 style="text-align: end; margin: 0px; position: relative; top: 36px; right: 36px; color: red;"><span style="font-size: 30px;">💰</span> Donate us...</h5></a>
+  <!-- corousal ends-->
+
+
+
+  <h5 style="text-align: end; margin: 0px; position: relative; top: 36px; right: 36px; color: red;"><a
+      href="/checkout/"><span style="font-size: 30px;">💰</span> Donate us...</a></h5>
 
   <div class="row p-3">
     <div class="row " style="margin-bottom: -2rem;">
@@ -87,12 +103,13 @@
     </div>
 
 
+
     <div class="row d-flex justify-content-center">
       {% for item in trending_recipe %}
-      <div class=" col-sm-2 trending_div" style="margin: 2rem 2rem; width: auto;">
+      <div class=" col-sm-2 trending_div" style="margin: 2rem 2.1rem; width: auto;">
         <a href="/recipe/description/?id={{item.id}}">
           <img class="card-img-top rounded-circle trending_img" src="{{item.thumbnail}}"
-            style="border: 10px solid white ; object-fit: cover; height:15rem; width:15rem" alt="Dish Picture">
+            style="border: 10px solid white ; object-fit: cover; height:15rem; width:15rem" alt="No Image">
           <div class="row recipe-edit" style="padding: 8px; height: 100%; ">
             <center>
               <h6 class="card-text m-1">{{item.name}}</h6>
@@ -106,11 +123,7 @@
 
 
 
-
-
-
-
-    <div class="row mx-5" style="margin-bottom: -2rem;">
+    <div class="row " style="margin-bottom: -2rem;">
       <h3>Recipes</h3>
       <hr>
     </div>
@@ -118,22 +131,19 @@
       {% for item in data.recipe.results %}
       <div class="card col-sm-2" style="margin: 2rem 2rem; width: auto;">
         <a href="/recipe/description/?id={{item.id}}">
-
           <img class="card-img-top" src="{{item.thumbnail}}"
-            style="border-radius: 5px ; object-fit: cover; height:17rem" alt="Dish Picture">
+            style="border-radius: 5px ; object-fit: cover; height:17rem" alt="No Image">
           <div class="row recipe-edit" style="padding: 8px; height: 100%; ">
             <center>
               <h6 class="card-text m-1">{{item.name}}</h6>
             </center>
-
           </div>
         </a>
-
       </div>
-
       {% endfor %}
     </div>
 
+    
     <!-- pagination -->
 
     <nav aria-label="Page navigation example">
@@ -148,7 +158,7 @@
             <span class="sr-only">Previous</span>
           </a>
         </li>
-        <li class="page-item"><a class="page-link" href="?page={{data.recipe.page | add:'-1'}}">{{ data.recipe.page |add:"-1" }}</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{data.recipe.page | add:'-1'}}">{{ data.recipe.page|add:"-1" }}</a></li>
 
 
 
@@ -157,7 +167,8 @@
 
         {% if data.recipe.next %}
 
-        <li class="page-item"><a class="page-link" href="?page={{data.recipe.page | add:'+1'}}">{{data.recipe.page|add:"+1"}}</a></li>
+        <li class="page-item"><a class="page-link"
+            href="?page={{data.recipe.page | add:'+1'}}">{{data.recipe.page|add:"+1"}}</a></li>
         <li class="page-item">
           <a class="page-link" href="{{data.recipe.next}}" aria-label="Next">
             <span aria-hidden="true">&raquo;</span>
@@ -191,7 +202,7 @@
 
     if (scrollPosition < (carouselWidth - cardWidth * 4)) { //check if you can go any further
       scrollPosition += cardWidth;  //update scroll position
-      $(".carousel-inner").animate({ scrollLeft: scrollPosition }, 600); //scroll left
+      $(".carousel-inner").animate({ scrollLeft: scrollPosition }, 700); //scroll left
     }
   });
   $(".carousel-control-prev").on("click", function () {
@@ -199,22 +210,27 @@
       scrollPosition -= cardWidth;
       $(".carousel-inner").animate(
         { scrollLeft: scrollPosition },
-        600
+        700
       );
     }
   });
-  var multipleCardCarousel = document.querySelector(
-    "#carouselExampleControls"
-  );
 
 
 
-  // setInterval(elementclick, 2500);
-  // function elementclick() {
-  //   document.getElementById("nextbutton").click();
-  // }
+let myInterval;
+  function elementclick() {
+    document.getElementById("nextbutton").click();
+  }
 
+  function startcrousal() {
+    myInterval = setInterval(elementclick, 1700);
+  }
 
+  function Stopcrousal() {
+    clearInterval(myInterval);
+  }
+  
+  startcrousal();
 </script>
 
 

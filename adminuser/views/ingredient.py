@@ -114,8 +114,13 @@ class DeleteIngredient(LoginRequiredMixin,APIView):
     permission_classes =[IsAdminUser]
     def get(self,request,id):
         item=Ingredient.objects.get(id=id)
-        item.delete()
-        messages.success(request,"ingredient Deleted Successfully")
+        if item.is_active:
+            print(1111111111111111111)
+            item.is_active=False
+        else:
+            print(22222222222222222222222)
+            item.is_active=True
+        item.save()
         return redirect ('/adminuser/ingredient/')
 
 

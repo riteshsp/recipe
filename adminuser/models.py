@@ -10,6 +10,7 @@ class Ingredient(models.Model):
     name = models.CharField(max_length=255, unique=True)
     image = models.ImageField(upload_to='static/ingredients/',null=True)
     id_ingrediant = models.CharField(max_length=255, null=True, blank = True )
+    is_active =models.BooleanField(default=True)
 
 
 
@@ -17,6 +18,7 @@ class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
     categoryImage = models.ImageField(upload_to='static/category/', null=True)
     description = models.TextField(null=True, blank=True)
+    is_active =models.BooleanField(default=True)
     
     def __str__(self) -> str:
         return self.name

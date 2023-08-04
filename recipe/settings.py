@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'users',
     'adminuser',
     'django_elasticsearch_dsl',
+    'django_social_share',
     ]
 
 MIDDLEWARE = [

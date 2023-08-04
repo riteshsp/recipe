@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from django.shortcuts import render, redirect
-from users.serializer import UserSerializer,updateUserSerializer,fullUserProfileSerializer
+from users.serializer import UserSerializer, updateUserSerializer, fullUserProfileSerializer
 # from rest_framework.response import Response
 from django.http import HttpResponse
 from users.models import User, UserProfile
@@ -15,6 +15,9 @@ from django .contrib import messages
 from users.tasks import send_email_task
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework.permissions import IsAdminUser
+from decouple import config
+import os
+from twilio.rest import Client
 
 
 class SignUp(APIView):
@@ -22,8 +25,10 @@ class SignUp(APIView):
         return render(request, 'signup.html')
 
     def send_email(self, subject, sender, receiver, message, link):
-        template = render_to_string('emailTemplates/email-template.html', {'name': message, 'verificationlink': link})
-        send_mail(subject, message=message, from_email=sender,recipient_list=[receiver],html_message=template)
+        template = render_to_string(
+            'emailTemplates/email-template.html', {'name': message, 'verificationlink': link})
+        send_mail(subject, message=message, from_email=sender,
+                  recipient_list=[receiver], html_message=template)
 
     def post(self, request):
         try:
@@ -51,7 +56,7 @@ class SignUp(APIView):
                     profile.verification_code = code
                     profile.save()
                     self.send_email('Verify your mail', EMAIL_HOST_USER,
-                                    request.data['username'], request.data['first_name'], f'http://127.0.0.1:8000/user/verification/{code}')
+                                    request.data['username'], request.data['first_name'], f"{config('site_base_url')}/user/verification/{code}")
                     return render(request, "signup.html", {"message": "A verification mail has been sent"})
                 else:
                     return render(request, "signup.html", {"errors": serializer.errors})
@@ -80,26 +85,35 @@ class VerifyEmail(APIView):
             return redirect('/')
 
 
-
-
-
 class Login(APIView):
 
     def get(self, request):
         return render(request, "login.html")
-    
+
     def post(self, request):
         try:
             username = request.data['username']
             password = request.data['password']
+
             user = authenticate(self, username=username, password=password)
             if user:
-                login(request, user)
-                if user.is_superuser:
-                    return redirect("/adminuser/recipe/")
+                if user.is_active:
+                    login(request, user)
+                    if user.is_superuser:
+                        return redirect("/adminuser/recipe/")
+                    else:
+                       
+                        # client = Client(config('TWILIO_ACCOUNT_SID'), config('TWILIO_AUTH_TOKEN'))
+                        # message = client.messages \
+                        #     .create(
+                        #         body='You have successfully signed in!!!',
+                        #         from_='+17622495195',
+                        #         to='+919588797029'
+                        #     )
+                        
+                        return redirect("/home/")
                 else:
-                    return redirect("/home/")
-
+                    return render(request, "login.html", {"message": "Please verify your email"})
             else:
                 return render(request, "login.html", {"message": "Incorrect Email or Password"})
         except Exception as e:
@@ -130,7 +144,7 @@ class ForgotPassword(APIView):
 
                 user_obj.userprofile.verification_code = token
                 user_obj.userprofile.save()
-                template = render_to_string('emailTemplates/email_forgot_password.html',{'resetlink': f"resetpassword/{token}"})
+                template = render_to_string('emailTemplates/email_forgot_password.html',{'resetlink': f"{config('site_base_url')}/resetpassword/{token}"})
                 send_email_task.delay(subject="Reset Your Password",message='',from_email=EMAIL_HOST_USER ,recipient_list=[email],template=template)
                 return render(request, "users/forgot_password.html", {"message": "A reset password link has been sent to your email"})
             else:

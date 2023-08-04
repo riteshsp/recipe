@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from users.views.userprofile import SignUp,Login ,ForgotPassword, ResetPassword, VerifyEmail ,LogOutUser ,Profile,EditProfile
-from users.views.recipe import Home,PaymentSuccess, SearchByCategory,ReportRecipe,GiveRating,RequestRecipe,RequestDelete , MyRecipes,MyRecipeDelete, CreateRecipe,RecipeDescription,ListFavourites,SearchRecipe,AddFavourites, DeleteFavourites,CreateComment,LikeComment,DislikeComment,DeleteComment
+from users.views.recipe import Home,AboutUs,PaymentSuccess, SearchByCategory,ReportRecipe,GiveRating,RequestRecipe,RequestDelete , MyRecipes,MyRecipeDelete, CreateRecipe,RecipeDescription,ListFavourites,SearchRecipe,AddFavourites, DeleteFavourites,CreateComment,LikeComment,DislikeComment,DeleteComment
 
 urlpatterns = [
     path('signup/', SignUp.as_view()),
@@ -18,6 +18,7 @@ urlpatterns = [
     
     path('search/bycategory/',SearchByCategory.as_view()),
     path('home/',Home.as_view()),
+    path('aboutus/',AboutUs.as_view()),
     path('recipe/description/',RecipeDescription.as_view()),
     path('search/recipe/',SearchRecipe.as_view()),
     path('add/tofavourite/',AddFavourites.as_view()),
@@ -45,7 +46,7 @@ urlpatterns = [
     path('recipe/comment/delete/',DeleteComment.as_view()),
 
 
-######################### PA ####################
+######################### PAYMENT ####################
 
     path('payment/success/',PaymentSuccess.as_view()),
 

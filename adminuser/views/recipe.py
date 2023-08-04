@@ -22,7 +22,7 @@ class ListRecipe(LoginRequiredMixin,APIView):
             results = paginator.paginate_queryset(recipe , request , view=self)
             serializer= RecipeListSerializer(results ,many=True)
 
-            page_number=request.GET.get("page","")
+            page_number=request.GET.get("page","1")
             data = paginator.get_paginated_response(serializer.data).data
             data["page"]=page_number
             data["last_page"]=math.ceil(recipe.count()/paginator.get_page_size(request))

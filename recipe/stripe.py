@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.views import View
 from adminuser.models import User,Payments
 from django.contrib.auth.mixins import LoginRequiredMixin
+from decouple import config
 
 stripe.api_key = STRIPE_SECRET_KEY
 
@@ -30,8 +31,8 @@ class CreateCheckoutSessionView(LoginRequiredMixin,View):
                 ],
                 
                 mode="payment",
-                success_url="http://127.0.0.1:8000/payment/success/",
-                cancel_url="http://127.0.0.1:8000/home/",
+                success_url=f"{config('site_base_url')}/payment/success/",
+                cancel_url=f"{config('site_base_url')}/home/",
             )
             intent=stripe.PaymentIntent.create(
             setup_future_usage='off_session',

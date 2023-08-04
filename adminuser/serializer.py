@@ -6,7 +6,7 @@ from adminuser.models import Category, Ingredient,Recipe,Recipe,Recipe_Ingredien
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ["id","name","categoryImage"]
+        fields = ["id","name","categoryImage","is_active"]
 
 
 
@@ -15,7 +15,7 @@ class IngredientSerializer(serializers.ModelSerializer):
     image2 = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Ingredient
-        fields = ["id","name","image","image2"]
+        fields = ["id","name","image","image2","is_active"]
     def get_image2(self, obj):
         if  str(obj.image).startswith("http"):
             return str(obj.image)
@@ -36,11 +36,13 @@ class RecipeListSerializer(serializers.ModelSerializer):
 
 class Recipe_IngredientSerializer(serializers.ModelSerializer):
     category = serializers.CharField(source='category.name', read_only=True)
+    creator = serializers.CharField(source='user.first_name', read_only=True)
+
 
     ingredients = serializers.SerializerMethodField()
     class Meta:
         model = Recipe
-        fields = ["id","name","thumbnail","calculated_rating","is_active","category","description","youtube_link","ingredients"]
+        fields = ["id","name","thumbnail","creator","calculated_rating","is_active","category","description","youtube_link","ingredients"]
 
     def get_ingredients(self,obj):
         objects=Recipe_Ingredient.objects.filter(recipe = obj)

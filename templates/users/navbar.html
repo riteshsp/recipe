@@ -81,7 +81,7 @@
         }
 
         a:hover {
-            color: brown
+            color: rgb(182, 58, 58)
         }
 
 
@@ -107,13 +107,13 @@
 
     <nav class=" main_nav nav navbar navbar-expand-lg d-flex align-items-center" style="padding:0; z-index: 1;background-color :#ffac81;
         background-image: linear-gradient(315deg, #ffac81 0%, #ff928b 74%);
-        z-index: 2; position: sticky; top: 0px; width: 100%;">
+        z-index: 2; position: sticky; top: 0px; width: 100%;" id="navbar">
 
 
 
         <div>
             <a class="navbar-brand  d-flex align-items-center" href="/home">
-                <img src="/static/logo.png" height="40px" style="padding-left: 1rem; margin: 0.2rem;" alt="Logo"
+                <img src="/static/logo.png" height="40px" style="padding-left: 1rem; margin: 0.2rem;" alt="No Image"
                     loading="lazy" />
             </a>
         </div>
@@ -122,9 +122,9 @@
 
         <div class="input-group rounded " style="width: 25rem;">
             <form action="/search/recipe/" class="d-flex align-items-center">
-                {% csrf_token %}
+                
                 <input type="search" class="form-control rounded" onchange="searchapi()"
-                    style="height: 42px; width: 29rem;" placeholder="Search" aria-label="Search" required
+                    style="height: 42px; width: 29rem;" placeholder="Search Recipe..." aria-label="Search" required
                     aria-describedby="search-addon" name="search_data" value="{{data.search_data}}">
                 <span class="input-group-text border-0 p-0" id="search-addon">
 
@@ -136,6 +136,9 @@
 
 
         <div class="d-flex align-items-center">
+            {% if user.is_superuser %}
+            <a href="/adminuser/recipe/"><strong class="d-none d-sm-block ms-1 p-3 ">Admin Panel</strong></a>
+            {% endif %}
             {% if user.is_authenticated %}
 
             <a href="/create/recipe/"><strong class="d-none d-sm-block ms-1 p-3 ">Create Recipe</strong></a>
@@ -145,7 +148,8 @@
                     data-mdb-toggle="dropdown" aria-expanded="false" href="#">
                     <strong class="d-none d-sm-block " style="color:black"></strong>&nbsp
 
-                    <img src="/{{user.userprofile.profilePic}}" class="rounded-circle border" height="50" alt="Profile pic" loading="lazy" />
+                    <img src="/{{user.userprofile.profilePic}}" class="rounded-circle border" height="50"
+                        alt="No Image" loading="lazy" />
                 </a>
                 <ul class="dropdown-menu " aria-labelledby="dropdownMenuButton" style="width: 30rem;">
                     <li><a class="dropdown-item" href="/profile">Profile</a></li>
@@ -176,17 +180,45 @@
         <div class="container p-4 pb-0">
             <section class="">
                 <form action="">
-                    <div class="row d-flex justify-content-center">
-                        <div class="col-auto">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
                             <p class="px-2 pt-2">
-                                <strong>Sign up for our newsletter</strong>
+                            <h2 style="font-weight: 900;">WISH DISH</h2>
                             </p>
                         </div>
-                        <div class="col-md-5 col-12">
-                            <div class="form-outline form-white mb-4">
-                                <input type="email" id="form5Example29" class="form-control" />
-                                <label class="form-label" for="form5Example29">Email address</label>
+                        <section class="mb-4">
+                            <!-- Facebook -->
+                            <a class="btn btn-outline-light btn-floating m-1 rounded-circle" href="#!" role="button"><i
+                                    class="fab fa-facebook-f"></i></a>
+
+                            <!-- Twitter -->
+                            <a class="btn btn-outline-light btn-floating m-1 rounded-circle" href="#!" role="button"><i
+                                    class="fab fa-twitter"></i></a>
+
+                            <!-- Google -->
+                            <a class="btn btn-outline-light btn-floating m-1 rounded-circle" href="#!" role="button"><i
+                                    class="fab fa-google"></i></a>
+
+                            <!-- Instagram -->
+                            <a class="btn btn-outline-light btn-floating m-1 rounded-circle" href="#!" role="button"><i
+                                    class="fab fa-instagram"></i></a>
+
+                            <!-- Linkedin -->
+                            <a class="btn btn-outline-light btn-floating m-1 rounded-circle" href="#!" role="button"><i
+                                    class="fab fa-linkedin-in"></i></a>
+
+                            <!-- Github -->
+                            <a class="btn btn-outline-light btn-floating m-1 rounded-circle" href="#!" role="button"><i
+                                    class="fab fa-github"></i></a>
+                        </section>
+
+                        <div class="d-flex justify-content-between">
+                            <div >
+                                <a href="/aboutus"><h5 class="px-5">About Us</h5></a>
                             </div>
+                            <div >
+                            <a href="#"><h5>Top of the page &nbsp<i class="fa-solid fa-arrow-turn-up"style="color: #ffffff;"></i></h5></a>
+                        </div>
                         </div>
                     </div>
                 </form>

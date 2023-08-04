@@ -4,17 +4,17 @@ from adminuser.models import Category, Reports, CommentsLike, CommentsDislike, C
 from adminuser.serializer import CategorySerializer, Recipe_IngredientSerializer
 from users.serializer import RequestSerializer, RecipeListSerializer, CreateRecipeSerializer, FavouritesSerializer
 from django.contrib.auth.mixins import LoginRequiredMixin
-from rest_framework.authentication import SessionAuthentication
-from rest_framework.permissions import IsAuthenticated
 from recipe.pagination import PagePagination
-from rest_framework.response import Response
 from django.contrib import messages
 from users.tasks import send_email_task
 from recipe.settings import EMAIL_HOST_USER
 from django.template.loader import render_to_string
-from adminuser.documents import RecipeDocument
+# from adminuser.documents import RecipeDocument
 from elasticsearch_dsl import Search
+from decouple import config
+from twilio.rest import Client
 from django.db.models import Q
+
 import math
 
 
@@ -23,21 +23,18 @@ class Home(APIView):
     def get(self, request):
         try:
             data = {}
-
             ######## category ########
-
-            category = Category.objects.all().values().order_by("?")
+            category = Category.objects.filter(is_active=True).values().order_by("?")
             for items in category:
                 if str(items["categoryImage"]).startswith("static"):
                     items["categoryImage"] = "/" + str(items["categoryImage"])
                 print(items["categoryImage"])
             data["category"] = category
 
-            trending_recipe = Recipe.objects.filter(is_approved=True, is_active=True).order_by('calculated_rating').values("id", "name", "thumbnail")[:5]
+            trending_recipe = Recipe.objects.filter(is_approved=True, is_active=True).order_by('-calculated_rating').values("id", "name", "thumbnail")[:5]
             for k in trending_recipe:
                 if k['thumbnail'].startswith('static'):
                     k['thumbnail'] = '/' + k['thumbnail']
-
 
 
 
@@ -60,20 +57,28 @@ class Home(APIView):
             return render(request, "users/home.html", {"data": data})
 
 
+
+
+
+############################ About Us ###################################
+
+class AboutUs(APIView):
+    def get(self, request):
+            return render(request, "users/about_us.html")
+       
+        
+
+
 class SearchRecipe(APIView):
     def get(self, request):
         try:
             name = request.GET.get("search_data", "")
-            recipe = Recipe.objects.filter(Q(name__istartswith=name,  is_active=True, is_approved=True)|Q(category__name=name,  is_active=True, is_approved=True))
-            
-            
+            recipe = Recipe.objects.filter(Q(name__istartswith=name,  is_active=True, is_approved=True)|Q(category__name=name,  is_active=True, is_approved=True)).order_by("-id")
             
             # recipe1 = RecipeDocument.search().query('prefix', name=name)
             # response = recipe1.execute()
             # for hit in response.hits:
             #     print(hit.to_dict())
-
-
 
             paginator = PagePagination()
             results = paginator.paginate_queryset(recipe, request, view=self)
@@ -92,6 +97,7 @@ class SearchRecipe(APIView):
                     item['thumbnail'] = item['thumbnail'].replace("%3A", ":/")
                 else:
                     pass
+            print(data)
             return render(request, "users/search_recipe.html", {'data': data})
             # return Response(data)
         except Exception as e:
@@ -99,14 +105,33 @@ class SearchRecipe(APIView):
             return render(request, "users/search_recipe.html", {'data': str(e)})
 
 
+
 class SearchByCategory(APIView):
     def get(self, request):
         id = request.GET.get("categoryid")
-        recipe = Recipe.objects.filter(category=id, is_approved=True, is_active=True).order_by('-id').values("id", "name", "thumbnail")
-        for k in recipe:
-            if k['thumbnail'].startswith('static'):
-                k['thumbnail'] = '/' + k['thumbnail']
-        return render(request, "users/recipebycategory.html", {"data": recipe})
+        recipe = Recipe.objects.filter(category=id, is_approved=True, is_active=True).order_by('-id')
+
+        paginator = PagePagination()
+        results = paginator.paginate_queryset(recipe, request, view=self)
+        serializer = RecipeListSerializer(results, many=True)
+
+        page_number = request.GET.get("page", "1")
+        data = paginator.get_paginated_response(serializer.data).data
+        data["categoryid"] = id
+        data["page"] = page_number
+        data["last_page"] = math.ceil(
+            recipe.count()/paginator.get_page_size(request))
+
+        for item in data['results']:
+            if item['thumbnail'].startswith("/http"):
+                item['thumbnail'] = item['thumbnail'][1:]
+                item['thumbnail'] = item['thumbnail'].replace("%3A", ":/")
+            else:
+                pass
+        print(data)
+        return render(request, "users/recipebycategory.html", {'data': data})
+
+
 
 
 class RecipeDescription(LoginRequiredMixin, APIView):
@@ -157,7 +182,6 @@ class RecipeDescription(LoginRequiredMixin, APIView):
 
                 lst.append({'comment': k, "like": like_exist,
                            "dislike": dislike_exist})
-                print(like_exist, dislike_exist)
 
             return render(request, "users/description.html", {"data": item, "comment": lst})
         except Exception as e:
@@ -174,13 +198,14 @@ class AddFavourites(LoginRequiredMixin, APIView):
             id = request.GET.get("id")
             user = request.user
             recipe = Recipe.objects.get(id=id)
-            if Favourites.objects.filter(recipe__id=id):
+            if Favourites.objects.filter(recipe__id=id,user =user):
                 pass
             else:
                 Favourites.objects.create(user=user, recipe=recipe)
             # return render(request,"users/search_recipe.html" ,{'data': id})
             return redirect(f"/recipe/description/?id={id}")
         except Exception as e:
+            print(str(e))
             return render(request, "users/search_recipe.html", {'data': str(e)})
 
 
@@ -218,14 +243,14 @@ class DeleteFavourites(LoginRequiredMixin, APIView):
 class CreateRecipe(LoginRequiredMixin, APIView):
     def get(self, request):
         try:
-            category = Category.objects.all().values('id', 'name')
+            category = Category.objects.filter(is_active=True).values('id', 'name')
             return render(request, "users/create_recipe.html", {'data': category})
         except Exception as e:
             return render(request, "users/create_recipe.html", {'data': str(e)})
 
     def post(self, request):
         try:
-            category = Category.objects.all().values('id', 'name')
+            category = Category.objects.filter(is_active=True).values('id', 'name')
             ingredient = request.data.getlist('ingredient')
             quantity = request.data.getlist('quantity')
 
@@ -243,15 +268,29 @@ class CreateRecipe(LoginRequiredMixin, APIView):
                 if not Recipe_Ingredient.objects.filter(ingredient=ingredient_obj, recipe=serializer.instance):
                     Recipe_Ingredient.objects.create(
                         ingredient=ingredient_obj, recipe=serializer.instance, quantity=j)
-
             template = render_to_string(
                 "emailTemplates/email_Receipe_create.html", {"name": request.user.first_name})
             send_email_task.delay('Hooray!!! Recipe Created', '', EMAIL_HOST_USER, [
                                   request.user.username], template)
 
+
+            client = Client(config('TWILIO_ACCOUNT_SID'), config('TWILIO_AUTH_TOKEN'))
+            message = client.messages.create(
+                    body=f'''
+Hello {request.user.first_name},
+Thank you for creating the recipe : {request.data['name']} !!! 
+Your recipe has been forwarded to admin for review.
+We are looking forward for your future contributions.
+Have a good day!!!''',
+                    from_='+17622495195',
+                    to='+919815430168'
+                )
+
             return render(request, "users/create_recipe.html", {'data': category, 'message': 'Request submitted Successfully'})
         except Exception as e:
-            return render(request, "users/create_recipe.html", {'data': str(e)})
+            print(str(e))
+            return render(request, "users/create_recipe.html", {'data': category, 'message': str(e) })
+
 
 
 ####################################### MyRecipes ######################################
@@ -436,6 +475,7 @@ class DeleteComment(LoginRequiredMixin,APIView):
 
 
 
+############################ Payment ###################################
 
 
 class PaymentSuccess(LoginRequiredMixin, APIView):
@@ -444,4 +484,7 @@ class PaymentSuccess(LoginRequiredMixin, APIView):
             return render(request, "users/payment_success.html")
         except Exception as e:
             return render(request, "users/payment_success.html", {'data': str(e)})
+
+
+
 
