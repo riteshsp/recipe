@@ -18,18 +18,35 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css">
 
 
 
 
     <style>
+        html {
+            font-size: 15px;
+        }
+
+        body {
+            height: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
         :root {
             --yellow: #FFC300;
             --orange: #FF7518;
             --light_orange: #FBCEB1;
             --dark_orange: #FF5733;
+            --brown: rgb(105, 42, 42);
         }
 
+        .btn-primary {
+            background-color: var(--brown) !important;
+            border: none
+        }
 
         .main_nav {
             display: flex;
@@ -58,18 +75,23 @@
             transform: translateX(-15%);
         }
 
-        a{
+        a {
             text-decoration: none;
             color: inherit;
         }
-        a:hover{
-            color:brown
+
+        a:hover {
+            color: rgb(182, 58, 58)
         }
 
 
         .dropdown-item:hover {
             font-weight: 600;
             background-color: #fff;
+        }
+
+        footer {
+            margin-top: auto;
         }
 
         /* .main_nav div strong:hover {
@@ -81,18 +103,17 @@
 
 </head>
 
-<body style="background-color: #ece8e3;">
+<body style="background-color: #ece8e3; width: 100%;">
 
-    <nav class=" main_nav nav navbar navbar-expand-lg d-flex align-items-center"
-        style="padding:0; z-index: 1;background-color :#ffac81;
+    <nav class=" main_nav nav navbar navbar-expand-lg d-flex align-items-center" style="padding:0; z-index: 1;background-color :#ffac81;
         background-image: linear-gradient(315deg, #ffac81 0%, #ff928b 74%);
-        z-index: 2; position: sticky; top: 0px; width: 100%;">
+        z-index: 2; position: sticky; top: 0px; width: 100%;" id="navbar">
 
 
 
         <div>
             <a class="navbar-brand  d-flex align-items-center" href="/home">
-                <img src="/static/logo.png" height="40px" style="padding-left: 1rem; margin: 0.2rem;" alt="Logo"
+                <img src="/static/logo.png" height="40px" style="padding-left: 1rem; margin: 0.2rem;" alt="No Image"
                     loading="lazy" />
             </a>
         </div>
@@ -101,37 +122,44 @@
 
         <div class="input-group rounded " style="width: 25rem;">
             <form action="/search/recipe/" class="d-flex align-items-center">
-                <input type="search" class="form-control rounded" style="height: 42px; width: 25rem;"
-                    placeholder="Search" aria-label="Search" required aria-describedby="search-addon" name="search_data" value="{{data.search_data}}"/>
+                
+                <input type="search" class="form-control rounded" onchange="searchapi()"
+                    style="height: 42px; width: 29rem;" placeholder="Search Recipe..." aria-label="Search" required
+                    aria-describedby="search-addon" name="search_data" value="{{data.search_data}}">
                 <span class="input-group-text border-0 p-0" id="search-addon">
 
-                    <button type="button " style="border: 0px; background-color:  #fc7f1900;"><i class='bx bx-search'
-                            style="padding-top: 5px"></i></button>
+                    <button type="submit" id="search_button" style="border: 0px; background-color:  #fc7f1900;"><i
+                            class='bx bx-search' style="padding-top: 5px"></i></button>
                 </span>
             </form>
         </div>
 
 
-
-
         <div class="d-flex align-items-center">
-                <strong class="d-none d-sm-block ms-1 p-3 ">Add Recipe</strong>
-                <strong class="d-none d-sm-block ms-1 p-3 ">My Recipes</strong>
+            {% if user.is_superuser %}
+            <a href="/adminuser/recipe/"><strong class="d-none d-sm-block ms-1 p-3 ">Admin Panel</strong></a>
+            {% endif %}
+            {% if user.is_authenticated %}
+
+            <a href="/create/recipe/"><strong class="d-none d-sm-block ms-1 p-3 ">Create Recipe</strong></a>
+            <a href="/my_recipes/"><strong class="d-none d-sm-block ms-1 p-3 ">My Recipes</strong></a>
             <div class="nav-item me-3 me-lg-1 dropdown">
                 <a class="nav-link d-sm-flex align-items-sm-center " type="button" id="dropdownMenuButton"
                     data-mdb-toggle="dropdown" aria-expanded="false" href="#">
-                    <strong class="d-none d-sm-block " style="color:black">Profile</strong>&nbsp
+                    <strong class="d-none d-sm-block " style="color:black"></strong>&nbsp
 
-                    <img src="/static/user.png" class="rounded-circle" height="50"
-                        alt="Profile pic" loading="lazy" />
+                    <img src="/{{user.userprofile.profilePic}}" class=" rounded-circle border " height="50" width="50"
+                        alt="No Image" loading="lazy"  />
                 </a>
-                <ul class="dropdown-menu " aria-labelledby="dropdownMenuButton" style="width: 0.2rem;">
-                    <li><a class="dropdown-item" href="#">Profile</a></li>
-                    <li><a class="dropdown-item" href="/favourites/">My Favourites</a></li>
-                    {% if user.is_authenticated %}
+                <ul class="dropdown-menu " aria-labelledby="dropdownMenuButton" style="width: 30rem;">
+                    <li><a class="dropdown-item" href="/profile">Profile</a></li>
+
+                    <li><a class="dropdown-item" href="/favourites">My Favourites</a></li>
+                    <li><a class="dropdown-item" href="/request">Request</a></li>
+
                     <li><a class="dropdown-item" href="/logout">Log Out</a></li>
                     {% else %}
-                    <li><a class="dropdown-item" href="/">Register/Login</a></li>
+                    <li><a class="px-4" href="/"><strong>Register/Login</strong></a></li>
                     {% endif %}
                     <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
                 </ul>
@@ -147,40 +175,76 @@
     {% endblock %}
 
 
-    <footer class="text-center text-white" style="background-color: rgb(77, 31, 31); position:relative; bottom:0rem;  width: 100%;;">
+    <footer class="text-center text-white"
+        style="background-color: rgb(77, 31, 31); position:relative; bottom:0rem;  width: 100%;;">
         <div class="container p-4 pb-0">
-          <section class="">
-            <form action="">
-              <div class="row d-flex justify-content-center">
-                <div class="col-auto">
-                  <p class="pt-2">
-                    <strong>Sign up for our newsletter</strong>
-                  </p>
-                </div>
-                <div class="col-md-5 col-12">
-                  <div class="form-outline form-white mb-4">
-                    <input type="email" id="form5Example29" class="form-control" />
-                    <label class="form-label" for="form5Example29">Email address</label>
-                  </div>
-                </div>
-                      <div class="col-auto">
-                  <button type="submit" class="btn btn-outline-light mb-4">
-                    Subscribe
-                  </button>
-                </div>
-              </div>
-            </form>
-          </section>
+            <section class="">
+                <form action="">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="px-2 pt-2">
+                            <h2 style="font-weight: 900;">WISH DISH</h2>
+                            </p>
+                        </div>
+                        <section class="mb-4">
+                            <!-- Facebook -->
+                            <a class="btn btn-outline-light btn-floating m-1 rounded-circle" href="#!" role="button"><i
+                                    class="fab fa-facebook-f"></i></a>
+
+                            <!-- Twitter -->
+                            <a class="btn btn-outline-light btn-floating m-1 rounded-circle" href="#!" role="button"><i
+                                    class="fab fa-twitter"></i></a>
+
+                            <!-- Google -->
+                            <a class="btn btn-outline-light btn-floating m-1 rounded-circle" href="#!" role="button"><i
+                                    class="fab fa-google"></i></a>
+
+                            <!-- Instagram -->
+                            <a class="btn btn-outline-light btn-floating m-1 rounded-circle" href="#!" role="button"><i
+                                    class="fab fa-instagram"></i></a>
+
+                            <!-- Linkedin -->
+                            <a class="btn btn-outline-light btn-floating m-1 rounded-circle" href="#!" role="button"><i
+                                    class="fab fa-linkedin-in"></i></a>
+
+                            <!-- Github -->
+                            <a class="btn btn-outline-light btn-floating m-1 rounded-circle" href="#!" role="button"><i
+                                    class="fab fa-github"></i></a>
+                        </section>
+
+                        <div class="d-flex justify-content-between">
+                            <div >
+                                <a href="/aboutus"><h5 class="px-5">About Us</h5></a>
+                            </div>
+                            <div >
+                            <a href="#"><h5>Top of the page &nbsp<i class="fa-solid fa-arrow-turn-up"style="color: #ffffff;"></i></h5></a>
+                        </div>
+                        </div>
+                    </div>
+                </form>
+            </section>
         </div>
-      
+
         <!-- Copyright -->
         <div class="text-center p-3" style="background-color: rgba(49, 29, 29, 0.5);">
-          © 2023 Copyright:
-          <a class="text-white" href="/home">&nbsp wishdish.com</a>
+            © 2023 Copyright:
+            <a class="text-white" href="/home">&nbsp wishdish.com</a>
         </div>
         <!-- Copyright -->
-      </footer>
+    </footer>
 
 </body>
+
+<script>
+
+    function searchapi() {
+        document.getElementById("search_button").click();
+        //    let value = event.target.value
+        //    fetch(`/search/recipe/?search_data=${value}`).then(respose => respose).then((data)=> console.log(data))
+
+    }
+
+
+</script>
 
 </html>

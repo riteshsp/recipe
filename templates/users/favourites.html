@@ -15,10 +15,7 @@
   }
   
   </style>
-
-
-
-<div class="container py-2" style="background-color: #E7E9EB;">
+<div class="container pt-4" style="background-color: #E7E9EB;">
   <nav class="d-flex">
       <h6 class="mb-0">
           <a href="/home">Home</a>
@@ -40,7 +37,7 @@
       </div>
 
       {% for item in data %}
-
+      
       <div class="row justify-content-center mb-3">
         <div class="col-md-12 col-xl-10">
           <div class="card shadow-0 border rounded-3">
@@ -49,7 +46,7 @@
                 <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
                   <div class="bg-image hover-zoom ripple rounded ripple-surface">
                     <img src="{{item.recipe.thumbnail}}"
-                      class="w-75" />
+                      class="w-75"  style="max-height: 13rem;"/>
                     <a href="#!">
                       <div class="hover-overlay">
                         <div class="mask" style="background-color: rgba(253, 253, 253, 0.15);"></div>
@@ -62,7 +59,7 @@
                   <h5>{{item.recipe.name}}</h5>
                   <div class="ratings">
 
-                    <span class="product-rating">4.6</span><span>/5</span>
+                    <span class="product-rating">{{item.recipe.calculated_rating}}</span><span>/5</span>
                     <div class="stars">
                         <i class="fa fa-star"></i>
                         <i class="fa fa-star"></i>
@@ -71,7 +68,7 @@
                         <i class="fa fa-star"></i>
                     </div>
                     <div class="rating-text">
-                        <span>46 ratings & reviews</span>
+                        <span>ratings & reviews</span>
                     </div><br>
                 </div>
 

@@ -6,13 +6,16 @@ from adminuser.models import Ingredient
 from django.contrib import messages
 from django.shortcuts import redirect
 from recipe.pagination import PagePagination
+from django.contrib.auth.mixins import LoginRequiredMixin
+from rest_framework.permissions import IsAdminUser
 import requests
 import json
 import math
 
         
 
-# class ListIngredient(APIView):
+# class ListIngredient(LoginRequiredMixin,APIView):
+    # permission_classes =[IsAdminUser]
   
 #     def get(self,request):        
 #         try:
@@ -32,12 +35,13 @@ import math
 #             return render(request,"ingredient/ingredient.html" ,{'errors':str(e)})
 
 
-class ListIngredient(APIView):
+class ListIngredient(LoginRequiredMixin,APIView):
+    permission_classes =[IsAdminUser]
   
     def get(self,request):        
         try:
             name=request.GET.get("search_data" , "")
-            ingredient = Ingredient.objects.filter(name__icontains=name)
+            ingredient = Ingredient.objects.filter(name__icontains=name).order_by("-is_active")
             serializer = IngredientSerializer(ingredient , many=True)
             for index, item in enumerate(serializer.data):
                 item['srno'] = index+1
@@ -54,7 +58,8 @@ class ListIngredient(APIView):
 
 
 
-class AddIngredient(APIView):
+class AddIngredient(LoginRequiredMixin,APIView):
+    permission_classes =[IsAdminUser]
     def get(self,request):
         ingredient=Ingredient.objects.all()
         serializer= IngredientSerializer(ingredient ,many=True)
@@ -79,7 +84,8 @@ class AddIngredient(APIView):
             return render(request, 'ingredient/add_ingredient.html', {"errors": str(e)})
 
 
-class FetchIngredient(APIView):
+class FetchIngredient(LoginRequiredMixin,APIView):
+    permission_classes =[IsAdminUser]
     def get(self,request):        
         try:
             apidata = requests.get("http://www.themealdb.com/api/json/v1/1/list.php?i=list")   
@@ -104,15 +110,20 @@ class FetchIngredient(APIView):
 
 
 
-class DeleteIngredient(APIView):
+class DeleteIngredient(LoginRequiredMixin,APIView):
+    permission_classes =[IsAdminUser]
     def get(self,request,id):
         item=Ingredient.objects.get(id=id)
-        item.delete()
-        messages.success(request,"ingredient Deleted Successfully")
+        if item.is_active:
+            item.is_active=False
+        else:
+            item.is_active=True
+        item.save()
         return redirect ('/adminuser/ingredient/')
 
 
-class UpdateIngredient(APIView):
+class UpdateIngredient(LoginRequiredMixin,APIView):
+    permission_classes =[IsAdminUser]
     def get(self, request, id):
         ingredient = Ingredient.objects.get(id=id)
         serializer = IngredientSerializer(ingredient)

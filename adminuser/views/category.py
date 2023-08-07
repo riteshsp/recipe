@@ -6,6 +6,8 @@ from adminuser.models import Category
 from django.contrib import messages
 from django.shortcuts import redirect
 from recipe.pagination import PagePagination
+from django.contrib.auth.mixins import LoginRequiredMixin
+from rest_framework.permissions import IsAdminUser
 import requests
 import json
 import math
@@ -13,12 +15,13 @@ import math
 
 
 
-class ListCategory(APIView):
+class ListCategory(LoginRequiredMixin,APIView):
+    permission_classes =[IsAdminUser]
     def get(self,request):
         try:
 
             name=request.GET.get("search_data","")
-            category=Category.objects.filter(name__icontains=name)
+            category=Category.objects.filter(name__icontains=name).order_by("-is_active")
             serializer= CategorySerializer(category ,many=True)
             for index, item in enumerate(serializer.data):
                 item['srno'] = index+1
@@ -43,40 +46,10 @@ class ListCategory(APIView):
 
 
 
-# class ListCategory(APIView):
-#     def get(self,request):
-#         try:
-
-#             name=request.GET.get("search_data","")
-#             category=Category.objects.filter(name__icontains=name)
-#             paginator = PagePagination()
-#             results = paginator.paginate_queryset( category , request , view=self)
-#             serializer= CategorySerializer(results ,many=True)
-#             page_number=request.GET.get("page","")
-#             data = paginator.get_paginated_response(serializer.data).data
-#             data["page"]=page_number
-#             data["last_page"]=math.ceil(category.count()/paginator.get_page_size(request))
-            
-#             for item in serializer.data:
-#                 if item['categoryImage'].startswith("/http"):
-#                     item['categoryImage'] = item['categoryImage'][1:]
-#                     item['categoryImage'] = item['categoryImage'].replace("%3A",":/")
-#                 else:
-#                     pass
-#             return render(request,"category.html" ,{'data': data})
-#             # return Response(serializer.data)
-
-#         except Exception as e:
-#             return Response(str(e))
-
-
-
-class AddCategory(APIView):
+class AddCategory(LoginRequiredMixin,APIView):
+    permission_classes =[IsAdminUser]
     def get(self,request):
-        category=Category.objects.all()
-        serializer= CategorySerializer(category ,many=True)
-        return render(request,"add_del_category.html" ,{'data': serializer.data})
-    
+        return render(request,"add_del_category.html")
 
     
     def post(self,request):
@@ -97,7 +70,8 @@ class AddCategory(APIView):
             return Response(str(e))
 
 
-class FetchCategory(APIView):
+class FetchCategory(LoginRequiredMixin,APIView):
+    permission_classes =[IsAdminUser]
     def get(self,request):
         
         try:
@@ -123,17 +97,23 @@ class FetchCategory(APIView):
 
 
 
-class DeleteCategory(APIView):
+class DeleteCategory(LoginRequiredMixin,APIView):
+    permission_classes =[IsAdminUser]
     def get(self,request,id):
         item=Category.objects.get(id=id)
-        item.delete()
-        messages.success(request,"Category Deleted Successfully")
+        if item.is_active:
+            item.is_active=False
+        else:
+            item.is_active=True
+        item.save()
+        # messages.success(request,"Category Deleted Successfully")
         return redirect ('/adminuser/category/')
 
   
 
 
-class UpdateCategory(APIView):
+class UpdateCategory(LoginRequiredMixin,APIView):
+    permission_classes =[IsAdminUser]
     def get(self, request, id):
         category = Category.objects.get(id=id)
         serializer = CategorySerializer(category)

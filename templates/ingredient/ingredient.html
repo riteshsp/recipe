@@ -29,6 +29,9 @@
         top: 20px;
         left: 16px;
     }
+    .swal2-confirm{
+        margin-left: 10px !important;
+    }
 
     /* .search button {
         position: absolute;
@@ -96,6 +99,7 @@
             <th>Sr. No.</th>
             <th> ingredient Name</th>
             <th> Image</th>
+            <th> Status</th>
             <th> Edit</th>
 
             {% for item in data.results %}
@@ -106,22 +110,29 @@
 
                 <td> 
                     {% if item.image2  %}
-                    <img src="{{item.image2}}" height="50px" alt="ingredient Image">
+                    <img src="{{item.image2}}" height="50px" alt="No Image Available">
 
                     {% else  %}
-                    <img src="{{item.image}}" height="50px" alt="ingredient Image">
+                    <img src="{{item.image}}" height="50px" alt="No Image Available">
 
                     {% endif %}
                 </td>
 
 
+         
+
+                <td>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" onchange="ingredientStatus('{{item.id}}')"
+                            role="switch" id="flexSwitchCheckChecked" {% if item.is_active %} checked {% endif %} />
+                    </div>
+                </td>
                 <td>
                     <a href="/adminuser/update/ingredient/{{item.id}}"><button type="button"
                             class="btn btn-warning">Update</button></a>&nbsp
-                    <a href="/adminuser/delete/ingredient/{{item.id}}"><button type="button" class="btn btn-danger"
-                            style="background-color: red; ">Delete</button></a>
+                    <!-- <a href="/adminuser/delete/ingredient/{{item.id}}"><button type="button" class="btn btn-danger"
+                            style="background-color: red; ">Delete</button></a> -->
                 </td>
-
             </tr>
             {% endfor %}
 
@@ -167,28 +178,61 @@
 
 
   
-  <!-- <div class="pagination">x
-      <span class="step-links">
-          {% if data.previous %}
-              <a href="?page=1">&laquo; first</a>
-              <a href="{{data.previous}}">previous</a>
-          {% endif %}
-
-          <span class="current">
-              Page {{ data.page }} of {{ data.last_page}}
-          </span>
   
-          {% if data.next %}
-              <a href="{{ data.next }}">next</a>
-              <a href="?page=last">last &raquo;</a>
-          {% endif %}
-      </span>
-  </div> -->
 
 
 
       
 </div>
 </div>
+<script>
+    function ingredientStatus(id) {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        })
+
+        swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, update it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                swalWithBootstrapButtons.fire(
+                    'Status!',
+                    'Status has been updates.',
+                    'success'
+                ).then(res =>{
+                    fetch(`/adminuser/delete/ingredient/${id}`)
+                }).then(res=>{
+                    location.reload();
+                })
+
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+        
+              
+            ){
+                swalWithBootstrapButtons.fire(
+                    'Cancelled',
+                    'Ingredient status is not reverted :)',
+                    'error'
+                )
+                // .then(res=>{
+                //     location.reload();
+                // })
+            }
+        })
+        }
+
+</script>
 
 {% endblock %}

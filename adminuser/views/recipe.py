@@ -2,25 +2,27 @@ from rest_framework.views import APIView
 from django.shortcuts import render,redirect
 import requests ,json ,math
 from adminuser.models import Recipe,Category, User,Ingredient, Recipe_Ingredient
-from recipe.pagination import PagePagination
+from recipe.pagination import PagePaginationAdmin
 from adminuser.serializer import RecipeListSerializer,Recipe_IngredientSerializer
 from rest_framework.response import Response
+from django.contrib.auth.mixins import LoginRequiredMixin
+from rest_framework.permissions import IsAdminUser
 from django.contrib import messages
 
 
 
 
-class ListRecipe(APIView):
+class ListRecipe(LoginRequiredMixin,APIView):
+    permission_classes =[IsAdminUser]
     def get(self,request):
         try:
-            
             name=request.GET.get("search_data","")
-            recipe=Recipe.objects.filter(name__icontains=name)
-            paginator = PagePagination()
+            recipe=Recipe.objects.filter(name__icontains=name).order_by("-id")
+            paginator = PagePaginationAdmin()
             results = paginator.paginate_queryset(recipe , request , view=self)
             serializer= RecipeListSerializer(results ,many=True)
 
-            page_number=request.GET.get("page","")
+            page_number=request.GET.get("page","1")
             data = paginator.get_paginated_response(serializer.data).data
             data["page"]=page_number
             data["last_page"]=math.ceil(recipe.count()/paginator.get_page_size(request))
@@ -41,7 +43,8 @@ class ListRecipe(APIView):
 
 
 
-class AddRecipe(APIView):
+class AddRecipe(LoginRequiredMixin,APIView):
+    permission_classes =[IsAdminUser]
     def get(self, request):
         return render(request, "recipe/add_recipe.html")
 
@@ -70,7 +73,8 @@ class AddRecipe(APIView):
 # recipe description
 
 
-class Description(APIView):
+class Description(LoginRequiredMixin,APIView):
+    permission_classes =[IsAdminUser]
     def get(self, request):
         try:
             item = request.GET.get("search_item")
@@ -93,7 +97,7 @@ class Description(APIView):
                     pass
             data["ingredient"] = ingredient
             try:
-                data["searchMeals"] = recipedata["meals"][0:6]
+                data["searchMeals"] = recipedata["meals"][0:5]
             except Exception as e:
                 pass
             return render(request, "recipe/recipe_description.html", {"data": data})
@@ -105,7 +109,8 @@ class Description(APIView):
 
 
 
-class AddRecipeToDB(APIView):
+class AddRecipeToDB(LoginRequiredMixin,APIView):
+    permission_classes =[IsAdminUser]
     def get(self, request):
         try:
             id = request.GET.get("idMeal")
@@ -151,7 +156,8 @@ class AddRecipeToDB(APIView):
 
 
 
-class DescriptionDB(APIView):
+class DescriptionDB(LoginRequiredMixin,APIView):
+    permission_classes =[IsAdminUser]
     def get(self, request):
         try:
             id = request.GET.get("id")
@@ -165,10 +171,20 @@ class DescriptionDB(APIView):
             else:
                 pass
           
-            recipe = Recipe.objects.filter(category__name = item['category']).values('id','name','thumbnail','category')
-            print(recipe)
+            similar_recipe = Recipe.objects.filter(category__name = item['category'])
+            
+            serializer2 = RecipeListSerializer(similar_recipe, many=True)
+            for item2 in serializer2.data:
+                if item2['thumbnail'].startswith("/http"):
+                    item2['thumbnail'] = item2['thumbnail'][1:]
+                    item2['thumbnail'] = item2['thumbnail'].replace("%3A", ":/")
+                else:
+                    pass
+
+
+
             try:
-                item['similar_items']=list(recipe)   
+                item['similar_items']=serializer2.data
             except Exception as e:
                 pass       
             return render(request, "recipe/recipe_descriptionDB.html", {"data": item})
@@ -184,11 +200,18 @@ class DescriptionDB(APIView):
 
 
 
-class DeleteRecipe(APIView):
+class DeleteRecipe(LoginRequiredMixin,APIView):
+    permission_classes =[IsAdminUser]
     def get(self,request):
         id = request.GET.get("id")
-        recipeIngredientObj=Recipe_Ingredient.objects.filter(recipe=id)
+
+
         recipeObj=Recipe.objects.get(id=id)
-        recipeIngredientObj.delete()
-        recipeObj.delete()
-        return redirect("/adminuser/recipe/")
+        if recipeObj.is_active==True:
+
+            recipeObj.is_active=False
+            recipeObj.save()
+        else:
+            recipeObj.is_active=True
+            recipeObj.save()
+        return redirect(f"/adminuser/recipe/description/?id={id}")
