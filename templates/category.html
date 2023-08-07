@@ -169,7 +169,7 @@
                     'success'
                 ).then(res =>{
                     fetch(`/adminuser/delete/category/${id}`)
-                    location.reload();
+                    // location.reload();
                 })
 
 
@@ -181,9 +181,10 @@
                     'Cancelled',
                     'Category status is not reverted :)',
                     'error'
-                ).then(res=>{
-                    location.reload();
-                })
+                )
+                // .then(res=>{
+                //     location.reload();
+                // })
             }
         })
         }

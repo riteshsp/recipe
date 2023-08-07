@@ -211,6 +211,8 @@
                     'success'
                 ).then(res =>{
                     fetch(`/adminuser/delete/ingredient/${id}`)
+                }).then(res=>{
+                    location.reload();
                 })
 
             } else if (
@@ -223,9 +225,10 @@
                     'Cancelled',
                     'Ingredient status is not reverted :)',
                     'error'
-                ).then(res=>{
-                    location.reload();
-                })
+                )
+                // .then(res=>{
+                //     location.reload();
+                // })
             }
         })
         }

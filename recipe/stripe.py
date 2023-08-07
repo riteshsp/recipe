@@ -11,9 +11,9 @@ stripe.api_key = STRIPE_SECRET_KEY
 
 # Create a Checkout Session
 class CreateCheckoutSessionView(LoginRequiredMixin,View):
-     def get(self, request, *args, **kwargs):
+     def post(self, request, *args, **kwargs):
         try:
-            amount=5000
+            amount=int(request.POST.get("amount","50"))*100
             checkout_session = stripe.checkout.Session.create(
                 payment_method_types=["card"],
                 line_items=[

@@ -143,25 +143,32 @@
                         <span id="category">{{data.category}}</span>
                     </div><br>
                     <span class="h6">Author :</span>
-                    <span id="category">{{data.creator}}</span><br><br>
+                    <span id="category">{{data.creator}}</span><br>
+                    <span class="h6">Date :</span>
+                    <span id="category">{{data.dateModified}}</span><br><br>
                     <p>
                         “Food for us comes from our relatives, whether they have wings or fins or roots. That is how we
                         consider food. Food has a culture. It has a history. It has a story. It has relationships.” </p>
 
                     <hr />
                     <div class="ratings">
-                        <span class="product-rating">{{data.calculated_rating}}</span><span>/5</span>
-                        <div class="star">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-
+                        <div class="d-flex align-items-center">
+                            <div>
+                            <span class="product-rating">{{data.calculated_rating}}</span>
+                            <span>/5</span>
+                            </div>
+                            <img class="px-2" src="https://img.icons8.com/?size=512&id=19417&format=png" style="height:3rem">
                         </div>
+                        <!-- <div class="star">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                        </div> -->
 
                         <div class="rating-text">
-                            <span>ratings & reviews</span>
+                            <span>{{data.review_count}} ratings & reviews</span>
                         </div><br>
                     </div>
 
@@ -176,8 +183,9 @@
                             class="fa-solid fa-heart" style="color: #ffffff;"></i></a>
                     {% endif %}
 
-                    <button type="button" class="btn btn-secondary p-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                        <i class="fa-solid fa-share fa-lg" ></i>&nbspShare
+                    <button type="button" class="btn btn-secondary p-3" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal">
+                        <i class="fa-solid fa-share fa-lg"></i>&nbspShare
                     </button>
 
                     <!-- Modal -->
@@ -187,8 +195,9 @@
                         aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
-                                <h5 style="text-align: center; padding-top: 50px;">Share this with your social Community</h5>
-                                    <div class="modal-body d-flex justify-content-center" >
+                                <h5 style="text-align: center; padding-top: 50px;">Share this with your social Community
+                                </h5>
+                                <div class="modal-body d-flex justify-content-center">
 
 
                                     {% post_to_facebook object_or_url '<img src="https://img.icons8.com/?size=512&id=uLWV5A9vXIPu&format=png" alt="" style="height: 60px;">'%}
@@ -196,14 +205,14 @@
                                     {% post_to_telegram "New Song: " object_or_url '<img src="https://img.icons8.com/?size=512&id=oWiuH0jFiU0R&format=png" alt="" style="height: 60px;">' %}
                                     {% post_to_twitter "New Song: . Check it out!" object_or_url '<img src="https://img.icons8.com/?size=512&id=bUGbDbW2XLqs&format=png" alt="" style="height: 60px;">' %}
                                     {% send_email 'Yummy Recipe' "Have a look at this delicious recipe" object_or_url '<img src="https://img.icons8.com/?size=512&id=eFPBXQop6V2m&format=png" alt="" style="height: 60px;">' %}
-                                    
 
-                                    
+
+
                                     <a href=""></a>
                                     <a href=""></a>
                                     <a href=""></a>
                                     <a href=""></a>
-                                    </div>
+                                </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary"
                                         data-bs-dismiss="modal">Close</button>
@@ -219,7 +228,6 @@
     </div>
 </section>
 <!-- content -->
-
 
 <!-- description Ingredient -->
 
@@ -438,7 +446,7 @@
                                     <textarea class="form-control" required style="max-height: 300px; height: 100px;"
                                         id="exampleFormControlTextarea1" name='description'></textarea>
                                 </div>
-                                <button class="btn btn-danger mt-2" onclick="reviewalert()" type="submit"
+                                <button class="btn btn-danger mt-2" onclick="reportalert()" type="submit"
                                     style="width: 100%;">Report Recipe</button>
                             </form>
 
@@ -514,13 +522,8 @@
     }
 
     function reviewalert() {
-        // Swal.fire(
-        //     'Thank You !!!',
-        //     'You rated this recipe!',
-        //     'success'
-        // )
-        Swal.fire({
 
+        Swal.fire({
             icon: 'success',
             title: ' Review  submitted!!!',
             showConfirmButton: false,
@@ -529,5 +532,26 @@
     }
 
 
+
+    function reportalert() {
+        txtarea = document.getElementById("exampleFormControlTextarea1").value
+        console.log(111, txtarea)
+        if (txtarea === '') {
+            console.log("in if")
+            Swal.fire({
+                title: 'Please write something!!!',
+                showConfirmButton: false,
+                timer: 1500
+            })
+        }
+        else {
+            Swal.fire({
+                icon: 'success',
+                title: ' Review  submitted!!!',
+                showConfirmButton: false,
+                timer: 1500
+            })
+        }
+    }
 </script>
 {% endblock %}

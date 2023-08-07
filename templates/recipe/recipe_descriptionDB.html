@@ -54,26 +54,33 @@
                         <span id="category">{{data.category}}</span>
                     </div><br>
                     <span class="h6">Author :</span>
-                    <span id="category">{{data.creator}}</span><br><br>
+                    <span id="category">{{data.creator}}</span><br>
+                    <span class="h6">Date :</span>
+                    <span id="category">{{data.dateModified}}</span><br><br>
+                    
                     <p>
                         “Food for us comes from our relatives, whether they have wings or fins or roots. That is how we
                         consider food. Food has a culture. It has a history. It has a story. It has relationships.” </p>
 
                     <hr />
                     <div class="ratings">
-
-                        <span class="product-rating">{{data.calculated_rating}}</span><span>/5</span>
-                        <div class="star">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-
+                        <div class="d-flex align-items-center">
+                            <div>
+                            <span class="product-rating">{{data.calculated_rating}}</span>
+                            <span>/5</span>
+                            </div>
+                            <img class="px-2" src="https://img.icons8.com/?size=512&id=19417&format=png" style="height:3rem">
                         </div>
+                        <!-- <div class="star">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                        </div> -->
 
                         <div class="rating-text">
-                            <span>ratings & reviews</span>
+                            <span>{{data.review_count}} ratings & reviews</span>
                         </div><br>
                     </div>
 
@@ -91,6 +98,8 @@
                     {% else %}
                     <button class="btn btn-success" onclick="DeleteRecipe()">Activate Now</button>
                     {% endif %}
+                    
+
                 </div>
             </main>
         </div>

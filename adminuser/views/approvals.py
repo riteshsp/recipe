@@ -15,7 +15,7 @@ class ListApprovals(LoginRequiredMixin,APIView):
     permission_classes =[IsAdminUser]
     def get(self,request):
         try: 
-            data = Recipe.objects.filter(is_approved=False,is_active = True).order_by("-id")
+            data = Recipe.objects.filter(is_active = True).order_by("-id")
             serializer = RecipeListSerializer(data, many =True)
             # for item in serializer.data:
             #         item['user'] = 

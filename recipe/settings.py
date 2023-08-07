@@ -31,7 +31,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG',cast=bool)
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # AUTH_USER_MODEL = 'users.CustomUser'
 AUTH_USER_MODEL = "users.User"
@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'adminuser',
-    'django_elasticsearch_dsl',
+    # 'django_elasticsearch_dsl',
     'django_social_share',
     ]
 
@@ -93,6 +93,28 @@ WSGI_APPLICATION = 'recipe.wsgi.application'
 #     }
 # }
 
+
+
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': config("DATABASE_NAME"),
+#         'USER': config('DATABASE_USER'),
+#         'PASSWORD': config('DATABASE_PASSWORD'),
+#         'HOST': config('DATABASE_HOST'),
+#         'PORT': config('DATABASE_PORT', cast=int),
+#         'OPTIONS': {
+#             'charset': 'utf8mb4',
+#             'init_command': "SET collation_connection = utf8mb4_unicode_ci",
+#         },
+#     }
+# }
+
+
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -101,6 +123,10 @@ DATABASES = {
         'PASSWORD': config('DATABASE_PASSWORD'),
         'HOST': config('DATABASE_HOST'),
         'PORT': config('DATABASE_PORT', cast=int),
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+            'init_command': "SET collation_connection = utf8mb4_unicode_ci",
+        },
     }
 }
 
@@ -186,11 +212,11 @@ CELERY_TIMEZONE = 'Asia/Kolkata'
 
 # ELASTIC SEARCH
 
-ELASTICSEARCH_DSL = {
-    'default': {
-        'hosts': 'localhost:9200',  # Update this with the correct Elasticsearch host and port
-    },
-}
+# ELASTICSEARCH_DSL = {
+#     'default': {
+#         'hosts': 'localhost:9200',  # Update this with the correct Elasticsearch host and port
+#     },
+# }
 
 STRIPE_PUBLISHABLE_KEY = config('STRIPE_PUBLISHABLE_KEY')
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')

@@ -52,11 +52,11 @@ class Rating(models.Model):
         if ratings:
             for item in ratings:
                 sum = (sum+item.rating)
-                sum = sum/len(ratings)
+            sum = sum/len(ratings)
         else:
             sum=self.rating
         recipe = Recipe.objects.get(id = self.recipe.id)
-        recipe.calculated_rating = sum
+        recipe.calculated_rating = round(sum,1)
         recipe.save()
         return super().save(*args,**kwargs)
 
