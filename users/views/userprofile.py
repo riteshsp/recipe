@@ -20,6 +20,7 @@ import os
 from twilio.rest import Client
 
 
+
 class SignUp(APIView):
     def get(self, request):
         return render(request, 'signup.html')
@@ -27,8 +28,7 @@ class SignUp(APIView):
     def send_email(self, subject, sender, receiver, message, link):
         template = render_to_string(
             'emailTemplates/email-template.html', {'name': message, 'verificationlink': link})
-        send_mail(subject, message=message, from_email=sender,
-                  recipient_list=[receiver], html_message=template)
+        send_mail(subject, message=message, from_email=sender,recipient_list=[receiver], html_message=template)
 
     def post(self, request):
         try:
@@ -46,20 +46,26 @@ class SignUp(APIView):
 
             serializer = UserSerializer(data=userdata, partial=True)
             username = User.objects.filter(username=request.data['username'])
-            if username:
-                return render(request, "signup.html", {"message": 'A user with this email already Exists', 'data': data})
-            else:
+            if not username:
                 if serializer.is_valid():
                     user = serializer.save()
-                    code = get_random_string(length=10)
-                    profile = user.userprofile
-                    profile.verification_code = code
-                    profile.save()
-                    self.send_email('Verify your mail', EMAIL_HOST_USER,
-                                    request.data['username'], request.data['first_name'], f"{config('site_base_url')}/user/verification/{code}")
-                    return render(request, "signup.html", {"message": "A verification mail has been sent"})
                 else:
                     return render(request, "signup.html", {"errors": serializer.errors})
+                # return render(request, "signup.html", {"message": 'A user with this email already Exists', 'data': data})
+            else:
+                if username.first().is_active==True:
+                    return render(request, "signup.html", {"message": 'A user with this email already Exists', 'data': data})
+                else:
+                    user =username.first()
+
+            code = get_random_string(length=10)
+            profile = user.userprofile
+            profile.verification_code = code
+            profile.save()
+            self.send_email('Verify your mail', EMAIL_HOST_USER,
+                            request.data['username'], request.data['first_name'], f"{config('site_base_url')}/user/verification/{code}")
+            return render(request, "signup.html", {"message": "A verification mail has been sent"})
+                
         except Exception as e:
             msg = {"data": str(
                 e), "message": "some error occured", "status": 500}
@@ -145,7 +151,10 @@ class ForgotPassword(APIView):
                 user_obj.userprofile.verification_code = token
                 user_obj.userprofile.save()
                 template = render_to_string('emailTemplates/email_forgot_password.html',{'resetlink': f"{config('site_base_url')}/resetpassword/{token}"})
-                send_email_task.delay(subject="Reset Your Password",message='',from_email=EMAIL_HOST_USER ,recipient_list=[email],template=template)
+                # send_email_task.delay(subject="Reset Your Password",message='',from_email=EMAIL_HOST_USER ,recipient_list=[email],template=template)
+                
+                send_mail(subject="Reset Your Password",message='',from_email=EMAIL_HOST_USER ,recipient_list=[email],html_message=template)
+                
                 return render(request, "users/forgot_password.html", {"message": "A reset password link has been sent to your email"})
             else:
                 return render(request, "users/forgot_password.html", {"errors": "This email doesn't exist"})

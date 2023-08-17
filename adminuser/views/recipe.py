@@ -128,8 +128,7 @@ class AddRecipeToDB(LoginRequiredMixin,APIView):
                     Category.objects.create(name = data['strCategory'] ,categoryImage = "/static/No_Image.jpg")
                 except:
                     category_object = Category.objects.get(name=data['strCategory'])
-                    recipe_object = Recipe.objects.create(name=data['strMeal'], thumbnail=data['strMealThumb'], idMeal=data['idMeal'], is_approved=True, user=User.objects.get(
-                        roles__name="admin"), category=category_object,description=data['strInstructions'],youtube_link=data['strYoutube'])
+                    recipe_object = Recipe.objects.create(name=data['strMeal'], thumbnail=data['strMealThumb'], idMeal=data['idMeal'], is_approved=True, user=User.objects.filter(roles__name="admin").first(), category=category_object,description=data['strInstructions'],youtube_link=data['strYoutube'],is_active=True)
                     for num in range(1,21):
                         item1 = "strIngredient"+str(num)
                         item2 = "strMeasure"+str(num)
@@ -171,7 +170,7 @@ class DescriptionDB(LoginRequiredMixin,APIView):
             else:
                 pass
           
-            similar_recipe = Recipe.objects.filter(category__name = item['category'])
+            similar_recipe = Recipe.objects.filter(category__name = item['category']).order_by("?")[:6]
             
             serializer2 = RecipeListSerializer(similar_recipe, many=True)
             for item2 in serializer2.data:

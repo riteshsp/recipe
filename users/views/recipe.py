@@ -9,6 +9,7 @@ from django.contrib import messages
 from users.tasks import send_email_task
 from recipe.settings import EMAIL_HOST_USER
 from django.template.loader import render_to_string
+from django.core.mail import send_mail
 # from adminuser.documents import RecipeDocument
 from elasticsearch_dsl import Search
 from decouple import config
@@ -270,8 +271,10 @@ class CreateRecipe(LoginRequiredMixin, APIView):
                         ingredient=ingredient_obj, recipe=serializer.instance, quantity=j)
             template = render_to_string(
                 "emailTemplates/email_Receipe_create.html", {"name": request.user.first_name})
-            send_email_task.delay('Hooray!!! Recipe Created', '', EMAIL_HOST_USER, [
-                                  request.user.username], template)
+            # send_email_task.delay('Hooray!!! Recipe Created', '', EMAIL_HOST_USER, [
+            #                       request.user.username], template)
+
+            send_mail(subject="Hooray!!! Recipe Created",message='',from_email=EMAIL_HOST_USER ,recipient_list=[request.user.username],html_message=template)
 
 
             client = Client(config('TWILIO_ACCOUNT_SID'), config('TWILIO_AUTH_TOKEN'))
@@ -289,7 +292,7 @@ Have a good day!!!''',
             return render(request, "users/create_recipe.html", {'data': category, 'message': 'Request submitted Successfully'})
         except Exception as e:
             print(str(e))
-            return render(request, "users/create_recipe.html", {'data': category, 'message': str(e) })
+            return render(request, "users/create_recipe.html", {'data': category, 'message': str(e),"values":request.data })
 
 
 

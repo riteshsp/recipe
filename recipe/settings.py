@@ -97,23 +97,6 @@ WSGI_APPLICATION = 'recipe.wsgi.application'
 
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': config("DATABASE_NAME"),
-#         'USER': config('DATABASE_USER'),
-#         'PASSWORD': config('DATABASE_PASSWORD'),
-#         'HOST': config('DATABASE_HOST'),
-#         'PORT': config('DATABASE_PORT', cast=int),
-#         'OPTIONS': {
-#             'charset': 'utf8mb4',
-#             'init_command': "SET collation_connection = utf8mb4_unicode_ci",
-#         },
-#     }
-# }
-
-
-
 
 DATABASES = {
     'default': {

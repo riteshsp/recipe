@@ -69,11 +69,30 @@
               <div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
                 <div class="d-flex flex-column mt-4">
                   <a href="/adminuser/approve/recipe/?id={{item.id}}" target="_blank"><button
-                      class="btn btn-success h-75 w-100 m-1" type="button">Approve Recipe</button></a>
-                  <button class="btn btn-outline-danger w-100 m-1" type="button" onclick="DeleteRecipe('{{item.id}}',document.getElementById('reject_reason').value)">
+                      class="btn btn-success h-75 w-100 m-1" data-bs-toggle="modal" data-bs-target="#staticBackdrop" type="button">Approve Recipe</button></a>
+                  <button class="btn btn-outline-danger w-100 m-1" data-bs-toggle="modal" data-bs-target="#staticBackdrop" type="button" onclick="DeleteRecipe('{{item.id}}',document.getElementById('reject_reason').value)">
                     Reject
                   </button>
                   <textarea name="reject_reason" id="reject_reason" class="w-100 m-1" placeholder="Reasons to reject" style=" max-height: 100px;" rows="2"></textarea>
+               
+                  <!-- loader -->
+
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+                  tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+
+                      <div class="modal-body">
+                        <div style="margin:5rem 10rem ;height: 50px;width: 50px;" class="spinner-border text-primary" role="status">
+                          <span style="font-size: 40px;" class="sr-only"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- loader end -->
+
                 </div>
               </div>
             </div>

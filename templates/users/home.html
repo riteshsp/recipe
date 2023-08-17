@@ -20,7 +20,7 @@
 
   .carousel-item img {
     /* max-height: 200px; */
-    height: 22vh;
+    height: 11rem;
     object-fit: contain;
   }
 
@@ -138,7 +138,7 @@
 
     <div class="row d-flex justify-content-center">
       {% for item in trending_recipe %}
-      <div class=" col-sm-2 trending_div" style="margin: 2rem 2.1rem; width: auto;">
+      <div class=" col-sm-2 trending_div" style="margin: 2rem 2.1rem; width: 17rem;">
         <a href="/recipe/description/?id={{item.id}}">
           <img class="card-img-top rounded-circle trending_img" src="{{item.thumbnail}}"
             style="border: 10px solid white ; object-fit: cover; height:15rem; width:15rem" alt="No Image">
@@ -161,7 +161,7 @@
     </div>
     <div class="row d-flex justify-content-center">
       {% for item in data.recipe.results %}
-      <div class="card col-sm-2" style="margin: 2rem 2rem; width: auto;">
+      <div class="card col-sm-2" style="margin: 2rem 2rem; width: 17rem;">
         <a href="/recipe/description/?id={{item.id}}">
           <img class="card-img-top" src="{{item.thumbnail}}"
             style="border-radius: 5px ; object-fit: cover; height:17rem" alt="No Image">

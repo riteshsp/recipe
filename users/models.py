@@ -20,7 +20,7 @@ class UserProfile(models.Model):
         User, on_delete=models.PROTECT, related_name='userprofile')
     profession = models.CharField(max_length=255, null=True, blank=True)
     profilePic = models.ImageField(
-        upload_to='static/profilepic', null=True, blank=True)
+        upload_to='static/profilepic', null=True, blank=True ,default='static/profilepic/default_profile.png')
     verification_code = models.CharField(max_length=100, null=True)
     phone = models.BigIntegerField(null=True, blank=True)
     about = models.CharField(max_length=555, null=True, blank=True)

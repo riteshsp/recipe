@@ -10,12 +10,14 @@ from users.tasks import send_email_task
 from recipe.settings import EMAIL_HOST_USER
 from rest_framework.permissions import IsAdminUser
 import math
+from django.core.mail import send_mail
+
 
 class ListApprovals(LoginRequiredMixin,APIView):
     permission_classes =[IsAdminUser]
     def get(self,request):
         try: 
-            data = Recipe.objects.filter(is_active = True).order_by("-id")
+            data = Recipe.objects.filter(is_active = True,is_approved=False).order_by("-id")
             serializer = RecipeListSerializer(data, many =True)
             # for item in serializer.data:
             #         item['user'] = 
@@ -46,6 +48,9 @@ class ApproveRecipe(LoginRequiredMixin,APIView):
 
             template = render_to_string("emailTemplates/email_recipe_approved.html",{"name":recipe.user.first_name,"recipe_name":recipe.name})
             send_email_task.delay('Hooray!!! Recipe Approved','',EMAIL_HOST_USER, [recipe.user.username] ,template)
+            
+            send_mail(subject="Hooray!!! Recipe Approved",message='',from_email=EMAIL_HOST_USER ,recipient_list=[request.user.username],html_message=template)
+
             return redirect("/adminuser/approvals/")
         except Exception as e:
             print(str(e))
@@ -63,7 +68,9 @@ class RejectRecipe(LoginRequiredMixin,APIView):
             recipe =Recipe.objects.get(id=id)
 
             template = render_to_string("emailTemplates/email_recipe_rejected.html",{"name":recipe.user.first_name,"recipe_name":recipe.name,"reasons":reasons})
-            send_email_task.delay('Recipe Rejected','',EMAIL_HOST_USER, [recipe.user.username] ,template)
+            # send_email_task.delay('Recipe Rejected','',EMAIL_HOST_USER, [recipe.user.username] ,template)
+
+            send_mail(subject="Recipe Rejected",message='',from_email=EMAIL_HOST_USER ,recipient_list=[request.user.username],html_message=template)
 
             messages.success(request,"Recipe Rejected !!!")
             return redirect("/adminuser/approvals/")
