@@ -29,7 +29,7 @@
   }
 
   .card {
-    box-shadow: 0 3px 10px rgb(2 2 2 / 0.2);
+    box-shadow: 0 5px 10px rgb(2 2 2 / 0.2);
   }
 
   .card:hover {
@@ -43,8 +43,9 @@
   }
 
   .trending_img:hover {
-    transform: rotate(360deg);
-    transition: transform 1s ease;
+    /* transform: rotate(360deg); */
+    transform: scale(1.1);
+    transition: transform 0.5s ease;
   }
 </style>
 
@@ -129,7 +130,7 @@
 
 
   <div class="row p-3">
-    <div class="row " style="margin-bottom: -2rem;">
+    <div class="row " style="margin-bottom: -1rem;">
       <h3>Trending Recipes</h3>
       <hr>
     </div>
@@ -138,7 +139,7 @@
 
     <div class="row d-flex justify-content-center">
       {% for item in trending_recipe %}
-      <div class=" col-sm-2 trending_div" style="margin: 2rem 2.1rem; width: 17rem;">
+      <div class=" col-sm-2 trending_div" style="margin: 2.2rem 1.8rem; width: 16rem;">
         <a href="/recipe/description/?id={{item.id}}">
           <img class="card-img-top rounded-circle trending_img" src="{{item.thumbnail}}"
             style="border: 10px solid white ; object-fit: cover; height:15rem; width:15rem" alt="No Image">
@@ -161,7 +162,7 @@
     </div>
     <div class="row d-flex justify-content-center">
       {% for item in data.recipe.results %}
-      <div class="card col-sm-2" style="margin: 2rem 2rem; width: 17rem;">
+      <div class="card col-sm-2" style="margin: 2rem 2rem; width: 19rem;">
         <a href="/recipe/description/?id={{item.id}}">
           <img class="card-img-top" src="{{item.thumbnail}}"
             style="border-radius: 5px ; object-fit: cover; height:17rem" alt="No Image">

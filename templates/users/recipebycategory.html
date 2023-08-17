@@ -1,7 +1,18 @@
 {% extends "users/navbar.html" %}
 {% block content %}
 
+<style>
+  .card:hover {
+    /* transform: rotate(360deg); */
+    transform: scale(1.05);
+    transition: transform 0.5s ease;
+    box-shadow: 0 13px 10px rgb(2 2 2 / 0.2);
+  }
+  .card{
+    box-shadow: 0 5px 10px rgb(2 2 2 / 0.2);
 
+  }
+</style>
 {% if data.results %}
 <div class="row p-5">
 
@@ -9,12 +20,13 @@
             <h4>Category : {{data.0.category}}</h4>
             <hr>
         </div>
+        <div class="row d-flex justify-content-center">
         {% for item in data.results %}
-        <div class="card col-sm-3" style="margin: 1.4rem 1.8rem; height: 100%;width: auto;">
+        <div class="card col-sm-3" style="padding: 0px; margin: 2rem 2rem; width: 18rem;">
             <a href="/recipe/description/?id={{item.id}}">
 
                 <img class="card-img-top" src="{{item.thumbnail}}"
-                    style="border-radius: 5px ; object-fit: cover; height:17rem" alt="No Image">
+                    style="border-radius: 5px ; object-fit: cover; height:17rem; width: 18rem;" alt="No Image">
                 <div class="row recipe-edit" style="padding: 8px; height: 100%; ">
                     <center>
                         <h6 class="card-text m-1">{{item.name}}</h6>
@@ -28,9 +40,9 @@
                 </div>
             </a>
         </div>
-
+        
         {% endfor %}
-
+      </div>
         <!-- pagination -->
         <nav aria-label="Page navigation example">
             <ul class="pagination">
