@@ -63,6 +63,14 @@ class AddRecipe(LoginRequiredMixin,APIView):
                     data1["meals"].append(items)
             except Exception as e:
                 pass
+            recipes= Recipe.objects.values_list("idMeal",flat=True)
+            for item in data1["meals"]:
+                if item["idMeal"] in recipes:
+                    item["exists"]=True
+                else:
+                    item["exists"]=False
+
+
             return render(request, "recipe/add_recipe.html", {'data': data1})
         except Exception as e:
             return render(request, "recipe/add_recipe.html")

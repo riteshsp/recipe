@@ -84,7 +84,6 @@ class updateUserSerializer(serializers.ModelSerializer):
         fields = ["first_name","last_name","profile"]
 
     def update(self, instance, validated_data):
-        print(validated_data)
         profile = validated_data.pop("profile")
         # last_name = validated_data.pop("last_name")
         # instance.first_name =fname

@@ -29,7 +29,6 @@ class Home(APIView):
             for items in category:
                 if str(items["categoryImage"]).startswith("static"):
                     items["categoryImage"] = "/" + str(items["categoryImage"])
-                print(items["categoryImage"])
             data["category"] = category
 
             trending_recipe = Recipe.objects.filter(is_approved=True, is_active=True).order_by('-calculated_rating').values("id", "name", "thumbnail")[:5]
@@ -98,7 +97,6 @@ class SearchRecipe(APIView):
                     item['thumbnail'] = item['thumbnail'].replace("%3A", ":/")
                 else:
                     pass
-            print(data)
             return render(request, "users/search_recipe.html", {'data': data})
             # return Response(data)
         except Exception as e:
@@ -129,7 +127,6 @@ class SearchByCategory(APIView):
                 item['thumbnail'] = item['thumbnail'].replace("%3A", ":/")
             else:
                 pass
-        print(data)
         return render(request, "users/recipebycategory.html", {'data': data})
 
 

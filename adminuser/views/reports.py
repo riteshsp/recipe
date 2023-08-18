@@ -43,7 +43,6 @@ class ReportsUpdateStatus(LoginRequiredMixin,APIView):
         try:
             id = request.GET.get("id")
             status = request.GET.get("status")
-            print(id,status)
             Reports.objects.filter(recipe=id).update(status=status)
             messages.success(request,"Status Updated successfully!!!")
             return redirect("/adminuser/reports/")
@@ -60,7 +59,6 @@ class ReportsDescription(LoginRequiredMixin,APIView):
     def get(self, request):
         id = request.GET.get('id')
         reports_obj = Reports.objects.filter(recipe=id)
-        print(reports_obj)
        
 
         return render(request, "reports_description.html",{"data":reports_obj})

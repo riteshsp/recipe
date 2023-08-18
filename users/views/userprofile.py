@@ -77,7 +77,6 @@ class VerifyEmail(APIView):
         try:
             userprofile = UserProfile.objects.get(verification_code=code)
             if userprofile:
-                print(userprofile)
                 userr = userprofile.user
                 userr.is_active = True
                 userr.save()
@@ -218,7 +217,6 @@ class EditProfile(LoginRequiredMixin,APIView):
     def post(self,request):
         
         data=request.data
-        print(data)
         modified_data = {
             "first_name": data.get("first_name",""),
             "last_name"  : data.get("last_name",""),

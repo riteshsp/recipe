@@ -24,7 +24,14 @@
         box-shadow: none;
         border: 2px solid rgb(255, 136, 0);
     }
-
+    .card {
+        box-shadow: 0 5px 10px rgb(2 2 2 / 0.2);
+    }
+    .card:hover {
+    /* box-shadow: 0 0 5px 5px rgb(241, 241, 241); */
+        transform: translate(0px,-10px);
+        transition: transform 0.4s ease;
+    }
     .search .fa-search {
         position: absolute;
         top: 20px;
@@ -67,7 +74,7 @@
                     <i class="fa fa-search"></i>
                     <input type="text" id="ingredient" class="form-control" placeholder="Want to add a Recipe ?"
                         name="mainIngredient" value="{{data.search_item}}">
-                    <button type="submit" class="btn btn-primary">Search</button>
+                    <button type="submit" class="btn btn-primary ">Search</button>
                 </div>
             </form>
 
@@ -90,16 +97,25 @@
 
         {% for items in data.meals %}
 
-        <div  class="card col-sm-3 " style="margin: 1.5rem;"><a href="/adminuser/add/recipe/description/?idMeal={{items.idMeal}}&search_item={{data.search_item}}">
+        <div  class="card col-sm-2 " style="margin: 1.5rem; padding: 0px; height: 100%; width: 15rem;"><a href="/adminuser/add/recipe/description/?idMeal={{items.idMeal}}&search_item={{data.search_item}}">
             <img class="card-img-top " src="{{items.strMealThumb}}" style="border-radius: 5px;object-fit: contain;" alt="Dish Picture">
             <div class="row h-50" style="padding: 8px;">
                 <div class="col-sm-9">
                     <h6 class="card-text">{{items.strMeal}}</h6>
                 </div>
-                <div class="col-sm-3" title="Add to database">
+                
+                    {% if items.exists %}
+                    <div class="col-sm-3 mr-1" title="Aready Exists">
+                    <i class="fa-solid fa-check"
+                            style="color: #ffffff; background-color: #039014; padding:5px 12px; margin: 5px 0px; border-radius: 5px;"></i>
+                   
+                    </div>
+                    {% else %} 
+                    <div class="col-sm-3 mr-1" title="Add to database">
                     <i class="fa-solid fa-plus"
-                            style="color: #ffffff; background-color: #0d6efd; padding:5px 15px; margin: 5px 0px; border-radius: 5px;"></i>
-                </div>
+                    style="color: #ffffff; background-color: #0d6efd; padding:5px 12px; margin: 5px 0px; border-radius: 5px;"></i>
+                    </div>
+                    {% endif %}
             </div></a>
         </div>
         {% endfor %}

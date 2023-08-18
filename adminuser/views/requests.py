@@ -31,7 +31,6 @@ class RequestsUpdateStatus(LoginRequiredMixin,APIView):
         try:
             id = request.GET.get("id")
             status = request.GET.get("status")
-            print(id,status)
             Request.objects.filter(id=id).update(status=status)
             messages.success(request,"Status Updated successfully!!!")
             return redirect("/adminuser/requests/")

@@ -13,6 +13,9 @@
         aspect-ratio: 15/16;
         
     }
+     .card {
+    box-shadow: 0 5px 10px rgb(2 2 2 / 0.2);
+  }
     .card:hover {
     /* box-shadow: 0 0 5px 5px rgb(241, 241, 241); */
     transform: translate(0px,-10px);
@@ -56,11 +59,11 @@
 
     <div class="row">
         {% for item in data.results %}
-        <div class="card col-sm-2" style="margin: 1.5rem; height: 100%; width: 20%;">
+        <div class="card col-sm-2" style="margin: 1.5rem; padding: 0px; height: 100%; width: 15rem;">
             <a href="/adminuser/recipe/description/?id={{item.id}}">
 
             <img class="card-img-top" src="{{item.thumbnail}}"
-            style="border-radius: 5px ; object-fit: cover; height:17rem" alt="Dish Picture">
+            style="border-radius: 5px ; object-fit: cover; height:15rem ;width: 14.9rem;" alt="Dish Picture">
             <div class="row recipe-edit" style="padding: 8px; height: 100%;">
 
                 <center>
