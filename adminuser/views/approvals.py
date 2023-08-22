@@ -47,7 +47,7 @@ class ApproveRecipe(LoginRequiredMixin,APIView):
             messages.success(request,"Recipe Approved successfully !!!")
 
             template = render_to_string("emailTemplates/email_recipe_approved.html",{"name":recipe.user.first_name,"recipe_name":recipe.name})
-            send_email_task.delay('Hooray!!! Recipe Approved','',EMAIL_HOST_USER, [recipe.user.username] ,template)
+            # send_email_task.delay('Hooray!!! Recipe Approved','',EMAIL_HOST_USER, [recipe.user.username] ,template)
             
             send_mail(subject="Hooray!!! Recipe Approved",message='',from_email=EMAIL_HOST_USER ,recipient_list=[request.user.username],html_message=template)
 
