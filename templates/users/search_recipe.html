@@ -16,18 +16,20 @@
   }
 </style>
 {% if data.results %}
-<div class="row p-5">
+<div class="p-5">
 
     <div class="row p-1">
         <h4>Search items: </h4>
         <hr>
     </div>
+    
+    <div class="row d-flex justify-content-center">
     {% for item in data.results %}
-    <div class="card col-sm-3" style="margin: 1.4rem 1.8rem; height: 100%;width: auto;">
+    <div class="card col-sm-3" style="margin: 1.4rem 1.8rem; height: 100%;width: 18rem;">
         <a href="/recipe/description/?id={{item.id}}">
 
             <img class="card-img-top" src="{{item.thumbnail}}"
-                style="border-radius: 5px ; object-fit: cover; height:17rem" alt="No image">
+                style="border-radius: 5px ; object-fit: cover; height:17rem ;width:18rem"  alt="No image">
             <div class="row recipe-edit" style="padding: 8px; height: 100%; ">
                 <center>
                     <h6 class="card-text m-1">{{item.name}}</h6>
@@ -43,7 +45,8 @@
         </a>
     </div>
     {% endfor %}
-    
+  </div>
+
     <!-- pagination -->
     <div>
     <nav aria-label="Page navigation example">

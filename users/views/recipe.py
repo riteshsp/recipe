@@ -73,7 +73,7 @@ class SearchRecipe(APIView):
     def get(self, request):
         try:
             name = request.GET.get("search_data", "")
-            recipe = Recipe.objects.filter(Q(name__istartswith=name,  is_active=True, is_approved=True)|Q(category__name=name,  is_active=True, is_approved=True)).order_by("-id")
+            recipe = Recipe.objects.filter(Q(name__icontains=name,  is_active=True, is_approved=True)|Q(category__name__icontains=name,  is_active=True, is_approved=True)).order_by("-id")
             
             # recipe1 = RecipeDocument.search().query('prefix', name=name)
             # response = recipe1.execute()
