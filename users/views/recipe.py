@@ -300,7 +300,7 @@ class MyRecipes(LoginRequiredMixin, APIView):
     def get(self, request):
         try:
             user = request.user
-            data = Recipe.objects.filter(user=user)
+            data = Recipe.objects.filter(user=user).order_by("-id")
             return render(request, "users/my_recipes.html", {'data': data})
             # return redirect(f"/recipe/description/?id={id}")
         except Exception as e:

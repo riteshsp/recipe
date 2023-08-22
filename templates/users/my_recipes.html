@@ -47,8 +47,11 @@
               <div class="row">
                 <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
                   <div class="bg-image hover-zoom ripple rounded ripple-surface">
+
+                    
                     <img src="/{{item.thumbnail}}"
                       class="w-75"  style="max-height: 13rem;"/>
+                    
                     <a href="#!">
                       <div class="hover-overlay">
                         <div class="mask" style="background-color: rgba(253, 253, 253, 0.15);"></div>
@@ -60,15 +63,21 @@
                 <div class="col-md-6 col-lg-6 col-xl-6">
                   <h5>{{item.name}}</h5>
                   <div class="ratings">
-
-                    <span class="product-rating">{{item.calculated_rating}}</span><span>/5</span>
-                    <div class="stars">
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
+                    <div class="d-flex align-items-center">
+                        <div>
+                        <span class="product-rating">{{item.calculated_rating}}</span>
+                        <span>/5</span>
+                        </div>
+                        <img class="px-2" src="https://img.icons8.com/?size=512&id=19417&format=png" style="height:3rem">
                     </div>
+                    <!-- <div class="star">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div> -->
+
                     <div class="rating-text">
                         <span>ratings & reviews</span>
                     </div><br>
@@ -82,11 +91,11 @@
                 <div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">        
                   <div class="d-flex flex-column mt-4">
                     
-                    <div class="d-flex my-3"><h6>status:&nbsp</h6>
+                    <div class="d-flex my-3"><h6>Active:&nbsp</h6>
                     {% if item.is_approved %}
-                    <h6 class="text-success">Approved</h6>
+                    <h6 class="text-success">True</h6>
                     {% else %}
-                    <h6 class="text-danger">Rejected</h6>
+                    <h6 class="text-danger">False</h6>
                     {% endif%}
                     </div> 
 
