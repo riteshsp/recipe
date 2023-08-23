@@ -20,7 +20,6 @@
     </h6>
   </nav>
 </div> -->
-{% if data %}
 
 
 <section>
@@ -38,6 +37,7 @@
     {% endfor %}
     {% endif %}
 
+    {% if data.results %}
     {% for item in data.results %}
 
     <div class="row justify-content-center mb-3">
