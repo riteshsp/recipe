@@ -101,6 +101,7 @@ class Login(APIView):
             password = request.data['password']
 
             user = authenticate(self, username=username, password=password)
+            print(111111111111111111111111,user)
             if user:
                 if user.is_active:
                     login(request, user)
@@ -120,7 +121,7 @@ class Login(APIView):
                 else:
                     return render(request, "login.html", {"message": "Please verify your email"})
             else:
-                return render(request, "login.html", {"message": "Incorrect Email or Password"})
+                return render(request, "login.html", {"message": "Unauthorised User"})
         except Exception as e:
             print(str(e))
             return redirect('/')
