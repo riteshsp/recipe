@@ -160,7 +160,7 @@ h5 {
   <!-- Close button for the iframe container -->
   <span class="close-iframe-btn" onclick="toggleChatIframe()">✖</span>
   <!-- Iframe for the chat page -->
-  <iframe src="https://chatterbot.softprodigyphp.in/" width="100%" height="100%" frameborder="0"></iframe>
+  <iframe id ="myIframe" src="https://chatterbot.softprodigyphp.in/" width="100%" height="100%" frameborder="0"></iframe>
 </div>
 </div>
 <script>
@@ -299,6 +299,19 @@ h5 {
 
 
 <script>
+// Assuming iframe has an id "myIframe"
+  var iframe = document.getElementById('myIframe');
+  iframe.contentWindow.postMessage('startSpeechRecognition', '*');
+  
+  window.addEventListener('message', function(event) {
+    if (event.data === 'startSpeechRecognition') {
+      // Start speech recognition here
+      const recognition = new webkitSpeechRecognition() || new SpeechRecognition();
+      recognition.start();
+    }
+  });
+  // Assuming iframe has an id "myIframe"
+  
   var carouselWidth = $(".carousel-inner")[0].scrollWidth;
   var cardWidth = $(".carousel-item").width();
   var scrollPosition = 0;
