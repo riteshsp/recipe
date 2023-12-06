@@ -302,14 +302,7 @@ h5 {
 // Assuming iframe has an id "myIframe"
   var iframe = document.getElementById('myIframe');
   iframe.contentWindow.postMessage('startSpeechRecognition', '*');
-  
-  window.addEventListener('message', function(event) {
-    if (event.data === 'startSpeechRecognition') {
-      // Start speech recognition here
-      const recognition = new webkitSpeechRecognition() || new SpeechRecognition();
-      recognition.start();
-    }
-  });
+
   // Assuming iframe has an id "myIframe"
   
   var carouselWidth = $(".carousel-inner")[0].scrollWidth;
