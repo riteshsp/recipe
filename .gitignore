@@ -1,1 +1,5 @@
 .env
+users/__pycache__/
+recipe/__pycache__/
+adminuser/__pycache__/
+myenv
