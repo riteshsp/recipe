@@ -178,12 +178,11 @@ h5 {
         <form method="post" action="/checkout/">
           {% csrf_token %}
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">How much you want to Donate </h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <div class="mb-3">
-              <label for="amount" class="col-form-label">Enter the amount in range(1-999999):</label>
+              <label for="amount" class="col-form-label">Enter the amount to donate in range(1-999999):</label>
               <input type="text" class="form-control" id="amount" name="amount">
             </div>
           </div>
