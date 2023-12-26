@@ -101,7 +101,6 @@ class Login(APIView):
             password = request.data['password']
 
             user = authenticate(self, username=username, password=password)
-            print(111111111111111111111111,user)
             if user:
                 if user.is_active:
                     login(request, user)
