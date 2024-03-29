@@ -150,26 +150,10 @@ h5 {
         <span style="font-size: 30px; cursor: pointer;">💬</span> Chat with Us
     </a>
 </h5> -->
-<h5>
-<a href="#" class="chat-link" onclick="toggleChatIframe()">
-  <span style="font-size: 30px; cursor: pointer;">💬</span> Chat with Us
-</a>
-</h5>
 
-<div class="chat-iframe-container" id="chatIframeContainer">
-  <!-- Close button for the iframe container -->
-  <span class="close-iframe-btn" onclick="toggleChatIframe()">✖</span>
-  <!-- Iframe for the chat page -->
-  <iframe id ="myIframe" src="https://chatterbot.softprodigyphp.in/" width="100%" height="100%" frameborder="0"></iframe>
+
+
 </div>
-</div>
-<script>
-  // Function to toggle the visibility of the chat iframe container
-  function toggleChatIframe() {
-      var chatIframeContainer = document.getElementById('chatIframeContainer');
-      chatIframeContainer.style.display = (chatIframeContainer.style.display === 'none' || chatIframeContainer.style.display === '') ? 'block' : 'none';
-  }
-</script>
 
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">

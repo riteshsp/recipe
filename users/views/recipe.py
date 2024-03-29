@@ -274,17 +274,17 @@ class CreateRecipe(LoginRequiredMixin, APIView):
             send_mail(subject="Hooray!!! Recipe Created",message='',from_email=EMAIL_HOST_USER ,recipient_list=[request.user.username],html_message=template)
 
 
-            client = Client(config('TWILIO_ACCOUNT_SID'), config('TWILIO_AUTH_TOKEN'))
-            message = client.messages.create(
-                    body=f'''
-Hello {request.user.first_name},
-Thank you for creating the recipe : {request.data['name']} !!! 
-Your recipe has been forwarded to admin for review.
-We are looking forward for your future contributions.
-Have a good day!!!''',
-                    from_='+17622495195',
-                    to='+919815430168'
-                )
+#             client = Client(config('TWILIO_ACCOUNT_SID'), config('TWILIO_AUTH_TOKEN'))
+#             message = client.messages.create(
+#                     body=f'''
+# Hello {request.user.first_name},
+# Thank you for creating the recipe : {request.data['name']} !!! 
+# Your recipe has been forwarded to admin for review.
+# We are looking forward for your future contributions.
+# Have a good day!!!''',
+#                     from_='+17622495195',
+#                     to='+919815430168'
+#                 )
 
             return render(request, "users/create_recipe.html", {'data': category, 'message': 'Request submitted Successfully'})
         except Exception as e:
