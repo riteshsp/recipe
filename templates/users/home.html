@@ -42,56 +42,62 @@
     aspect-ratio: 15/16;
   }
 
-  .trending_div:hover img{
+  .trending_div:hover img {
     /* transform: rotate(360deg); */
     transform: scale(1.1);
     transition: transform 0.5s ease;
   }
 
-.chat-link {
+  .chat-link {
     cursor: pointer;
     color: blue;
     text-decoration: none;
     position: fixed;
-    bottom: 20px; /* Adjust as needed */
-    right: 20px; /* Adjust as needed */
-    z-index: 1000; /* Ensure the chat button is above other elements */
-}
+    bottom: 20px;
+    /* Adjust as needed */
+    right: 20px;
+    /* Adjust as needed */
+    z-index: 1000;
+    /* Ensure the chat button is above other elements */
+  }
 
-.chat-link:hover {
+  .chat-link:hover {
     color: darkblue;
-}
+  }
 
-h5 {
+  h5 {
     text-align: end;
     margin: 0px;
     position: relative;
     top: 36px;
     right: 36px;
     color: red;
-}
+  }
 
-/* Container for the iframe */
-.chat-iframe-container {
+  /* Container for the iframe */
+  .chat-iframe-container {
     position: fixed;
     bottom: 0;
     right: 0;
     width: 385px;
-    height: 70%;/* Adjust the height as needed */
-    display: none; /* Initially hide the container */
+    height: 70%;
+    /* Adjust the height as needed */
+    display: none;
+    /* Initially hide the container */
     background-color: white;
     border: 1px solid #ccc;
-    z-index: 1001; /* Ensure the iframe container is above the chat button */
-}
+    z-index: 1001;
+    /* Ensure the iframe container is above the chat button */
+  }
 
-/* Close button for the iframe container */
-.close-iframe-btn {
+  /* Close button for the iframe container */
+  .close-iframe-btn {
     position: absolute;
     top: 10px;
     right: 10px;
     cursor: pointer;
     font-size: 18px;
-}
+  }
 </style>
 
 
@@ -135,41 +141,15 @@ h5 {
   </div>
   <!-- corousal ends-->
 
-
-
-  <!-- <h5 style="text-align: end; margin: 0px; position: relative; top: 36px; right: 36px; color: red;"><a
-      href="/checkout/"><span style="font-size: 30px;">💰</span> Donate us...</a></h5> -->
-
   <h5 style="text-align: end; margin: 0px; position: relative; top: 36px; right: 36px; color: red;">
-    <a data-bs-toggle="modal" data-bs-target="#exampleModal" style="cursor:pointer"  ><span style="font-size: 30px; ">💰</span> Donate us...</a>
+    <a data-bs-toggle="modal" data-bs-target="#exampleModal" style="cursor:pointer"><span
+        style="font-size: 30px; ">💰</span> Donate us...</a>
   </h5>
 
   <div id="wrapped-code" class="wrapped-code-class">
-  <!-- <h5>
-    <a href="https://chatterbot.softprodigyphp.in/" class="chat-link">
-        <span style="font-size: 30px; cursor: pointer;">💬</span> Chat with Us
-    </a>
-</h5> -->
-<h5>
-<a href="#" class="chat-link" onclick="toggleChatIframe()">
-  <span style="font-size: 30px; cursor: pointer;">💬</span> Chat with Us
-</a>
-</h5>
 
-<div class="chat-iframe-container" id="chatIframeContainer">
-  <!-- Close button for the iframe container -->
-  <span class="close-iframe-btn" onclick="toggleChatIframe()">✖</span>
-  <!-- Iframe for the chat page -->
-  <iframe id ="myIframe" src="https://chatterbot.softprodigyphp.in/" width="100%" height="100%" frameborder="0"></iframe>
-</div>
-</div>
-<script>
-  // Function to toggle the visibility of the chat iframe container
-  function toggleChatIframe() {
-      var chatIframeContainer = document.getElementById('chatIframeContainer');
-      chatIframeContainer.style.display = (chatIframeContainer.style.display === 'none' || chatIframeContainer.style.display === '') ? 'block' : 'none';
-  }
-</script>
+
+  </div>
 
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -262,7 +242,8 @@ h5 {
             <span class="sr-only">Previous</span>
           </a>
         </li>
-        <li class="page-item"><a class="page-link" href="?page={{data.recipe.page | add:'-1'}}">{{data.recipe.page|add:"-1" }}</a></li>
+        <li class="page-item"><a class="page-link"
+            href="?page={{data.recipe.page | add:'-1'}}">{{data.recipe.page|add:"-1" }}</a></li>
 
 
 
@@ -289,25 +270,18 @@ h5 {
 </div>
 
 
-
-
-
-
-
-
-
-
 <script>
-// Assuming iframe has an id "myIframe"
-  var iframe = document.getElementById('myIframe');
-  iframe.contentWindow.postMessage('startSpeechRecognition', '*');
+  // Assuming iframe has an id "myIframe"
+  // var iframe = document.getElementById('myIframe');
+  // iframe.contentWindow.postMessage('startSpeechRecognition', '*');
 
   // Assuming iframe has an id "myIframe"
-  
+
   var carouselWidth = $(".carousel-inner")[0].scrollWidth;
   var cardWidth = $(".carousel-item").width();
   var scrollPosition = 0;
   $(".carousel-control-next").on("click", function () {
+    console.log("test carousel")
     console.log(cardWidth, carouselWidth);
 
     if (scrollPosition < (carouselWidth - cardWidth * 4)) { //check if you can go any further
@@ -327,7 +301,7 @@ h5 {
 
 
 
-  let myInterval;
+  var myInterval = ''
   function elementclick() {
     document.getElementById("nextbutton").click();
   }
